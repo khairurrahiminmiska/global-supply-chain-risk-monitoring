@@ -1,17 +1,29 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Dashboard') }}
-        </h2>
-    </x-slot>
+@extends('layouts.main')
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900">
-                    {{ __("You're logged in!") }}
-                </div>
-            </div>
-        </div>
+@section('content')
+
+<div class="grid grid-cols-4 gap-6">
+
+    <div class="bg-white rounded-xl shadow p-5">
+        <h2 class="text-gray-500">Countries</h2>
+        <h1 class="text-4xl font-bold mt-3">0</h1>
     </div>
-</x-app-layout>
+
+    <div class="bg-white rounded-xl shadow p-5">
+        <h2 class="text-gray-500">Weather Alerts</h2>
+        <h1 class="text-4xl font-bold mt-3">0</h1>
+    </div>
+
+    <div class="bg-white rounded-xl shadow p-5">
+        <h2 class="text-gray-500">News Today</h2>
+        <h1 class="text-4xl font-bold mt-3">0</h1>
+    </div>
+
+    <div class="bg-white rounded-xl shadow p-5">
+        <h2 class="text-gray-500">Risk Score</h2>
+        <h1 class="text-4xl font-bold mt-3">0</h1>
+    </div>
+
+</div>
+
+@endsection
