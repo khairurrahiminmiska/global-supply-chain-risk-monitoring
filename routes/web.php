@@ -21,4 +21,8 @@ Route::get('/countries', [CountryController::class, 'index'])
     ->middleware(['auth'])
     ->name('countries.index');
 
+Route::post('/countries/sync', [CountryController::class, 'sync'])
+    ->middleware(['auth'])
+    ->name('countries.sync');
+
 require __DIR__.'/auth.php';
