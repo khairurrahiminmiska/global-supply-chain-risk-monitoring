@@ -15,4 +15,9 @@ class Country extends Model
         'population',
         'flag',
     ];
+
+    public function exchangeRates()
+    {
+        return $this->hasMany(ExchangeRate::class);
+    }
 }

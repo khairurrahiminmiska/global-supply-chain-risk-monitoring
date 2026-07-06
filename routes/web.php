@@ -21,8 +21,17 @@ Route::get('/countries', [CountryController::class, 'index'])
     ->middleware(['auth'])
     ->name('countries.index');
 
+Route::get('/countries/{country}', [CountryController::class, 'show'])
+    ->middleware(['auth'])
+    ->name('countries.show');
+
 Route::post('/countries/sync', [CountryController::class, 'sync'])
     ->middleware(['auth'])
     ->name('countries.sync');
+
+Route::post('/countries/{country}/exchange-rate', [CountryController::class, 'syncExchangeRate'])
+    ->middleware(['auth'])
+    ->name('countries.exchange.sync');
+
 
 require __DIR__.'/auth.php';

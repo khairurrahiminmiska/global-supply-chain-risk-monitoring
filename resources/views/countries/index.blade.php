@@ -1,40 +1,26 @@
-<x-app-layout>
+@extends('layouts.main')
 
-    <x-slot name="header">
-        @if(session('success'))
+@section('content')
 
-<div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
+<div class="flex justify-between items-center mb-6">
 
-    {{ session('success') }}
+    <h2 class="text-3xl font-bold">
+        🌍 Countries
+    </h2>
 
-</div>
+    <form method="GET" action="{{ route('countries.index') }}">
 
-@endif
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            Countries
-        </h2>
-    </x-slot>
-
-    <div class="py-6">
-
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-
-                <div class="p-6">
-
-                    <h3 class="text-lg font-bold mb-4">
-                        🌍 Countries List
-                    </h3>
-
-                     <form action="{{ route('countries.sync') }}" method="POST">
-
-        @csrf
+        <input
+            type="text"
+            name="search"
+            value="{{ request('search') }}"
+            placeholder="Search country..."
+            class="border rounded-lg px-4 py-2">
 
         <button
-            class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">
+            class="bg-blue-600 text-white px-4 py-2 rounded-lg">
 
-            🔄 Sync Countries
+            Search
 
         </button>
 
@@ -42,85 +28,96 @@
 
 </div>
 
-                    <table class="table-auto w-full border">
+<div class="bg-white rounded-xl shadow overflow-hidden">
 
-                        <thead class="bg-gray-200">
+    <table class="w-full">
 
-                            <tr>
+        <thead class="bg-slate-100">
 
-                                <th class="border p-2">No</th>
-                                <th class="border p-2">Flag</th>
-                                <th class="border p-2">Country</th>
-                                <th class="border p-2">Capital</th>
-                                <th class="border p-2">Region</th>
-                                <th class="border p-2">Population</th>
+            <tr>
 
-                            </tr>
+                <th class="p-4">Flag</th>
 
-                        </thead>
+                <th class="p-4">Country</th>
 
-                        <tbody>
+                <th class="p-4">Code</th>
 
-                        @forelse($countries as $country)
+                <th class="p-4">Region</th>
 
-                            <tr>
+                <th class="p-4">Currency</th>
 
-                                <td class="border p-2">
-                                    {{ $loop->iteration }}
-                                </td>
+                <th class="p-4">Population</th>
 
-                                <td class="border p-2">
+                <th class="p-4">Action</th>
 
-                                    @if($country->flag)
+            </tr>
 
-                                        <img src="{{ $country->flag }}" width="40">
+        </thead>
 
-                                    @endif
+        <tbody>
 
-                                </td>
+        @forelse($countries as $country)
 
-                                <td class="border p-2">
-                                    {{ $country->name }}
-                                </td>
+            <tr class="border-t">
 
-                                <td class="border p-2">
-                                    {{ $country->capital }}
-                                </td>
+                <td class="p-3">
 
-                                <td class="border p-2">
-                                    {{ $country->region }}
-                                </td>
+                    @if($country->flag)
 
-                                <td class="border p-2">
-                                    {{ number_format($country->population) }}
-                                </td>
+                        <img src="{{ $country->flag }}" width="40">
 
-                            </tr>
+                    @endif
 
-                        @empty
+                </td>
 
-                            <tr>
+                <td>{{ $country->name }}</td>
 
-                                <td colspan="6" class="border p-4 text-center">
+                <td>{{ $country->code }}</td>
 
-                                    Belum ada data negara.
+                <td>{{ $country->region }}</td>
 
-                                </td>
+                <td>{{ $country->currency }}</td>
 
-                            </tr>
+                <td>{{ number_format($country->population) }}</td>
 
-                        @endforelse
+                <td>
 
-                        </tbody>
+                    <a
+                        href="{{ route('countries.show',$country) }}"
+                        class="bg-blue-600 text-white px-3 py-2 rounded">
 
-                    </table>
+                        Detail
 
-                </div>
+                    </a>
 
-            </div>
+                </td>
 
-        </div>
+            </tr>
 
-    </div>
+        @empty
 
-</x-app-layout>
+            <tr>
+
+                <td colspan="7" class="text-center p-8">
+
+                    Tidak ada data.
+
+                </td>
+
+            </tr>
+
+        @endforelse
+
+        </tbody>
+
+    </table>
+
+</div>
+
+<div class="mt-5">
+
+    {{ $countries->links() }}
+
+</div>
+
+@endsection

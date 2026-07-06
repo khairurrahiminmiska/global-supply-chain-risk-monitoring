@@ -25,9 +25,10 @@
                 🏠 Dashboard
             </a>
 
-            <a href="#" class="block px-6 py-3 hover:bg-slate-700">
-                🌍 Countries
-            </a>
+            <a href="{{ route('countries.index') }}"
+   class="block px-6 py-3 hover:bg-slate-700">
+    🌍 Countries
+</a>
 
             <a href="#" class="block px-6 py-3 hover:bg-slate-700">
                 ⚓ Ports

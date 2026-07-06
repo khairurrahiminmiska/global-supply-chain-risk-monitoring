@@ -5,13 +5,14 @@ namespace App\Http\Controllers;
 use App\Models\Country;
 use App\Services\CountryService;
 use Illuminate\Http\Request;
+use App\Services\ExchangeRateService;
 
 class CountryController extends Controller
 {
     protected $countryService;
 
     /**
-     * Dependency Injection
+     * Constructor
      */
     public function __construct(CountryService $countryService)
     {
@@ -21,15 +22,27 @@ class CountryController extends Controller
     /**
      * Menampilkan daftar negara
      */
-    public function index()
-    {
-        $countries = Country::orderBy('name')->get();
+    public function index(Request $request)
+{
+    $countries = Country::query()
 
-        return view('countries.index', compact('countries'));
-    }
+        ->when($request->search,function($query) use($request){
+
+            $query->where('name','like','%'.$request->search.'%')
+                  ->orWhere('code','like','%'.$request->search.'%')
+                  ->orWhere('region','like','%'.$request->search.'%');
+
+        })
+
+        ->orderBy('name')
+
+        ->paginate(10);
+
+    return view('countries.index',compact('countries'));
+}
 
     /**
-     * Sinkronisasi data dari API
+     * Sinkronisasi data negara
      */
     public function sync()
     {
@@ -37,6 +50,28 @@ class CountryController extends Controller
 
         return redirect()
             ->route('countries.index')
-            ->with('success', 'Data negara berhasil diperbarui dari API.');
+            ->with('success', 'Data negara berhasil diperbarui.');
     }
+
+    /**
+     * Detail negara
+     */
+    public function show(Country $country)
+{
+    $exchangeRate = $country->exchangeRates()
+        ->latest('retrieved_at')
+        ->first();
+
+    return view('countries.show', compact('country', 'exchangeRate'));
+}
+
+
+    public function syncExchangeRate(Country $country, ExchangeRateService $service)
+{
+    $service->sync($country);
+
+    return redirect()
+        ->route('countries.show', $country)
+        ->with('success', 'Exchange Rate berhasil diperbarui.');
+}
 }
