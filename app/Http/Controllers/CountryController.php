@@ -6,6 +6,7 @@ use App\Models\Country;
 use App\Services\CountryService;
 use Illuminate\Http\Request;
 use App\Services\ExchangeRateService;
+use App\Services\NewsService;
 
 class CountryController extends Controller
 {
@@ -56,13 +57,25 @@ class CountryController extends Controller
     /**
      * Detail negara
      */
-    public function show(Country $country)
+  public function show(Country $country)
 {
     $exchangeRate = $country->exchangeRates()
         ->latest('retrieved_at')
         ->first();
 
-    return view('countries.show', compact('country', 'exchangeRate'));
+    $news = $country->news()
+        ->latest('published_at')
+        ->take(5)
+        ->get();
+
+    return view(
+        'countries.show',
+        compact(
+            'country',
+            'exchangeRate',
+            'news'
+        )
+    );
 }
 
 
@@ -73,5 +86,20 @@ class CountryController extends Controller
     return redirect()
         ->route('countries.show', $country)
         ->with('success', 'Exchange Rate berhasil diperbarui.');
+}
+    
+public function syncNews(
+    Request $request,
+    Country $country,
+    NewsService $service
+)
+{
+    $category = $request->category ?? 'economy';
+
+    $service->sync($country, $category);
+
+    return redirect()
+        ->route('countries.show', $country)
+        ->with('success', 'News berhasil diperbarui.');
 }
 }

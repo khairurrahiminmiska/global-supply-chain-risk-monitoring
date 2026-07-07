@@ -9,97 +9,30 @@
     </a>
 </div>
 
-<div class="bg-white rounded-xl shadow p-6">
+<<div class="bg-white rounded-xl shadow-lg p-6">
 
-    <div class="flex items-center gap-6">
-
-        @if($country->flag)
-            <img src="{{ $country->flag }}"
-                 alt="{{ $country->name }}"
-                 class="w-28 border rounded">
-        @endif
+    <div class="flex justify-between items-center mb-6">
 
         <div>
 
-            <h1 class="text-3xl font-bold">
-                {{ $country->name }}
-            </h1>
+            <h2 class="text-2xl font-bold">
+                💱 Exchange Rate
+            </h2>
 
-            <p class="text-gray-500">
-                {{ $country->code }}
+            <p class="text-gray-500 text-sm">
+                Nilai tukar mata uang terbaru
             </p>
 
         </div>
-
-    </div>
-
-    <hr class="my-6">
-
-    <div class="grid grid-cols-2 gap-6">
-
-        <div>
-
-            <h3 class="font-semibold text-gray-600">
-                Capital
-            </h3>
-
-            <p>{{ $country->capital ?: '-' }}</p>
-
-        </div>
-
-        <div>
-
-            <h3 class="font-semibold text-gray-600">
-                Region
-            </h3>
-
-            <p>{{ $country->region }}</p>
-
-        </div>
-
-        <div>
-
-            <h3 class="font-semibold text-gray-600">
-                Currency
-            </h3>
-
-            <p>{{ $country->currency ?: '-' }}</p>
-
-        </div>
-
-        <div>
-
-            <h3 class="font-semibold text-gray-600">
-                Population
-            </h3>
-
-            <p>{{ number_format($country->population) }}</p>
-
-        </div>
-
-    </div>
-
-</div>
-
-{{-- Placeholder untuk modul berikutnya --}}
-<div class="grid grid-cols-2 gap-6 mt-8">
-
-    <div class="bg-white rounded-xl shadow p-5">
-
-    <div class="flex justify-between items-center mb-4">
-
-        <h2 class="text-xl font-bold">
-            💱 Exchange Rate
-        </h2>
 
         <form action="{{ route('countries.exchange.sync',$country) }}" method="POST">
 
             @csrf
 
             <button
-                class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">
+                class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg">
 
-                Update Rate
+                🔄 Update Rate
 
             </button>
 
@@ -109,58 +42,180 @@
 
     @if($exchangeRate)
 
-        <div class="space-y-2">
+        <div class="grid grid-cols-2 gap-6">
 
-            <p>
+            <div>
 
-                <strong>Base Currency :</strong>
+                <p class="text-gray-500">
+                    Base Currency
+                </p>
 
-                {{ $exchangeRate->base_currency }}
+                <h2 class="text-3xl font-bold">
+                    {{ $exchangeRate->base_currency }}
+                </h2>
 
+            </div>
+
+            <div>
+
+                <p class="text-gray-500">
+                    Target Currency
+                </p>
+
+                <h2 class="text-3xl font-bold">
+                    {{ $exchangeRate->target_currency }}
+                </h2>
+
+            </div>
+
+        </div>
+
+        <hr class="my-6">
+
+        <div>
+
+            <p class="text-gray-500">
+                Current Exchange Rate
             </p>
 
-            <p>
+            <h1 class="text-5xl font-bold text-green-600 mt-2">
 
-                <strong>Target Currency :</strong>
+                {{ number_format($exchangeRate->rate,2,',','.') }}
 
-                {{ $exchangeRate->target_currency }}
+            </h1>
 
-            </p>
+        </div>
 
-            <p>
+        <div class="mt-6 text-sm text-gray-500">
 
-                <strong>Rate :</strong>
+            Last Updated
 
-                {{ number_format($exchangeRate->rate,2) }}
+            <br>
 
-            </p>
-
-            <p>
-
-                <strong>Last Update :</strong>
-
-                {{ $exchangeRate->retrieved_at }}
-
-            </p>
+            {{ $exchangeRate->retrieved_at->format('d M Y H:i') }}
 
         </div>
 
     @else
 
-        <p class="text-gray-500">
+        <div class="text-center py-8">
 
-            Belum ada data exchange rate.
+            <p class="text-gray-500">
 
-        </p>
+                Belum ada data exchange rate.
+
+            </p>
+
+        </div>
 
     @endif
 
 </div>
 
-    <div class="bg-white rounded-xl shadow p-5">
-        <h2 class="text-lg font-bold mb-3">📰 News</h2>
-        <p class="text-gray-500">Belum diintegrasikan.</p>
+    <div class="bg-white rounded-xl shadow-lg p-6 mt-6">
+
+    <div class="flex justify-between items-center mb-5">
+
+        <div>
+            <h2 class="text-2xl font-bold">
+                📰 Latest News
+            </h2>
+
+            <p class="text-gray-500 text-sm">
+                Berita terbaru terkait negara ini
+            </p>
+        </div>
+
+        <form
+    action="{{ route('countries.news.sync',$country) }}"
+    method="POST"
+    class="flex gap-3">
+
+    @csrf
+
+    <select
+        name="category"
+        class="border rounded-lg px-4 py-2">
+
+        <option value="logistics">
+            🚚 Logistics
+        </option>
+
+        <option value="trade">
+            🌍 Trade
+        </option>
+
+        <option value="shipping">
+            🚢 Shipping
+        </option>
+
+        <option value="economy" selected>
+            💰 Economy
+        </option>
+
+    </select>
+
+    <button
+        class="bg-green-600 text-white px-5 rounded-lg">
+
+        🔄 Update News
+
+    </button>
+
+</form>
+
     </div>
+
+    @forelse($news as $item)
+
+        <div class="border rounded-lg p-4 mb-4">
+
+            <h3 class="text-lg font-bold">
+                {{ $item->title }}
+            </h3>
+
+            <p class="text-gray-600 mt-2">
+                {{ $item->description }}
+            </p>
+
+            <div class="flex justify-between mt-4 text-sm text-gray-500">
+
+                <span>
+
+                    {{ $item->source }}
+
+                </span>
+
+                <span>
+
+                    {{ \Carbon\Carbon::parse($item->published_at)->format('d M Y H:i') }}
+
+                </span>
+
+            </div>
+
+            <a
+                href="{{ $item->url }}"
+                target="_blank"
+                class="inline-block mt-4 text-blue-600 hover:underline">
+
+                Baca Selengkapnya →
+
+            </a>
+
+        </div>
+
+    @empty
+
+        <div class="text-center py-6 text-gray-500">
+
+            Belum ada berita.
+
+        </div>
+
+    @endforelse
+
+</div>
 
     <div class="bg-white rounded-xl shadow p-5">
         <h2 class="text-lg font-bold mb-3">🌦 Weather</h2>

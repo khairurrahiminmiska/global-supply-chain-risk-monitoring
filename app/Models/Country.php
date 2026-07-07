@@ -20,4 +20,9 @@ class Country extends Model
     {
         return $this->hasMany(ExchangeRate::class);
     }
+
+    public function news()
+{
+    return $this->hasMany(News::class);
+}
 }

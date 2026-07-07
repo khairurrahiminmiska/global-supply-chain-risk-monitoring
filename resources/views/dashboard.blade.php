@@ -2,27 +2,59 @@
 
 @section('content')
 
-<div class="grid grid-cols-4 gap-6">
+<div class="bg-white rounded-xl shadow p-5">
+
+    <h2 class="text-gray-500">
+        🌍 Countries
+    </h2>
+
+    <h1 class="text-5xl font-bold mt-4">
+
+        {{ $totalCountries }}
+
+    </h1>
+
+</div>
+
+   <div class="bg-white rounded-xl shadow p-5">
+
+    <h2 class="text-gray-500">
+        💱 Exchange Rate
+    </h2>
+
+    <h1 class="text-3xl font-bold mt-4 text-green-600">
+
+        Active
+
+    </h1>
+
+</div>
+
+   <div class="bg-white rounded-xl shadow p-5">
+
+    <h2 class="text-gray-500">
+        📰 News
+    </h2>
+
+    <h1 class="text-xl font-bold mt-4 text-yellow-600">
+
+        Coming Soon
+
+    </h1>
+
+</div>
 
     <div class="bg-white rounded-xl shadow p-5">
-        <h2 class="text-gray-500">Countries</h2>
-        <h1 class="text-4xl font-bold mt-3">0</h1>
-    </div>
 
-    <div class="bg-white rounded-xl shadow p-5">
-        <h2 class="text-gray-500">Weather Alerts</h2>
-        <h1 class="text-4xl font-bold mt-3">0</h1>
-    </div>
+    <h2 class="text-gray-500">
+        📈 Risk Score
+    </h2>
 
-    <div class="bg-white rounded-xl shadow p-5">
-        <h2 class="text-gray-500">News Today</h2>
-        <h1 class="text-4xl font-bold mt-3">0</h1>
-    </div>
+    <h1 class="text-xl font-bold mt-4 text-gray-500">
 
-    <div class="bg-white rounded-xl shadow p-5">
-        <h2 class="text-gray-500">Risk Score</h2>
-        <h1 class="text-4xl font-bold mt-3">0</h1>
-    </div>
+        Coming Soon
+
+    </h1>
 
 </div>
 

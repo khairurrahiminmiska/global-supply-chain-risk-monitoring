@@ -3,13 +3,18 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CountryController;
 use Illuminate\Support\Facades\Route;
+use App\Models\Country;
 
 Route::get('/', function () {
     return view('welcome');
 });
 
 Route::get('/dashboard', function () {
-    return view('dashboard');
+
+    $totalCountries = Country::count();
+
+    return view('dashboard', compact('totalCountries'));
+
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
@@ -32,6 +37,10 @@ Route::post('/countries/sync', [CountryController::class, 'sync'])
 Route::post('/countries/{country}/exchange-rate', [CountryController::class, 'syncExchangeRate'])
     ->middleware(['auth'])
     ->name('countries.exchange.sync');
+
+Route::post('/countries/{country}/news', [CountryController::class, 'syncNews'])
+    ->name('countries.news.sync')
+    ->middleware('auth');
 
 
 require __DIR__.'/auth.php';
