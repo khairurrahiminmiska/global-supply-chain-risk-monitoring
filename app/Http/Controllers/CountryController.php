@@ -7,6 +7,9 @@ use App\Services\CountryService;
 use Illuminate\Http\Request;
 use App\Services\ExchangeRateService;
 use App\Services\NewsService;
+use App\Services\WorldBankService;
+use App\Services\WeatherService;
+use App\Services\RiskScoreService;
 
 class CountryController extends Controller
 {
@@ -57,7 +60,7 @@ class CountryController extends Controller
     /**
      * Detail negara
      */
-  public function show(Country $country)
+    public function show(Country $country)
 {
     $exchangeRate = $country->exchangeRates()
         ->latest('retrieved_at')
@@ -65,15 +68,21 @@ class CountryController extends Controller
 
     $news = $country->news()
         ->latest('published_at')
-        ->take(5)
+        ->take(10)
         ->get();
+
+    $weather = $country->weather;
+
+    $risk = $country->riskScore;
 
     return view(
         'countries.show',
         compact(
             'country',
             'exchangeRate',
-            'news'
+            'news',
+            'weather',
+            'risk'
         )
     );
 }
@@ -102,4 +111,45 @@ public function syncNews(
         ->route('countries.show', $country)
         ->with('success', 'News berhasil diperbarui.');
 }
+
+        public function syncWeather(
+    Country $country,
+    WeatherService $service
+)
+{
+    $service->sync($country);
+
+    return redirect()
+        ->route('countries.show',$country)
+        ->with('success','Weather berhasil diperbarui.');
+}
+    
+    public function syncEconomy(
+    Country $country,
+    WorldBankService $service
+)
+{
+    $service->sync($country);
+
+    return back()->with(
+        'success',
+        'Data ekonomi berhasil diperbarui.'
+    );
+}
+     
+    public function calculateRisk(
+    Country $country,
+    RiskScoreService $service
+)
+{
+    $service->calculate($country);
+
+    return redirect()
+        ->route('countries.show',$country)
+        ->with(
+            'success',
+            'Risk Score berhasil dihitung.'
+        );
+}
+
 }

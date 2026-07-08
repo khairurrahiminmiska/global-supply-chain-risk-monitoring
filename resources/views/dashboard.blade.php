@@ -2,59 +2,270 @@
 
 @section('content')
 
-<div class="bg-white rounded-xl shadow p-5">
+{{-- Hero --}}
+<div class="bg-gradient-to-r from-blue-600 to-indigo-700 rounded-2xl shadow-lg p-8 text-white mb-8">
 
-    <h2 class="text-gray-500">
-        🌍 Countries
-    </h2>
-
-    <h1 class="text-5xl font-bold mt-4">
-
-        {{ $totalCountries }}
-
+    <h1 class="text-4xl font-bold">
+        🌍 Global Supply Chain Risk Monitoring
     </h1>
+
+    <p class="mt-2 text-blue-100">
+        Monitor countries, exchange rates, supply chain news, weather,
+        and logistics risks in one dashboard.
+    </p>
 
 </div>
 
-   <div class="bg-white rounded-xl shadow p-5">
+{{-- Statistik --}}
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-8">
 
-    <h2 class="text-gray-500">
-        💱 Exchange Rate
-    </h2>
+    {{-- Countries --}}
+    <div class="bg-white rounded-2xl shadow-lg p-6 hover:shadow-xl transition">
 
-    <h1 class="text-3xl font-bold mt-4 text-green-600">
+        <div class="flex justify-between items-center">
 
-        Active
+            <div>
 
-    </h1>
+                <p class="text-gray-500">
+                    Countries
+                </p>
+
+                <h2 class="text-5xl font-bold text-blue-600 mt-3">
+                    {{ $countryCount }}
+                </h2>
+
+                <p class="text-green-600 text-sm mt-3">
+                    ✔ Database Connected
+                </p>
+
+            </div>
+
+            <div class="text-6xl">
+                🌍
+            </div>
+
+        </div>
+
+    </div>
+
+    {{-- Exchange --}}
+    <div class="bg-white rounded-2xl shadow-lg p-6 hover:shadow-xl transition">
+
+        <div class="flex justify-between items-center">
+
+            <div>
+
+                <p class="text-gray-500">
+                    Exchange Rate
+                </p>
+
+                <h2 class="text-5xl font-bold text-green-600 mt-3">
+                    {{ $exchangeRateCount }}
+                </h2>
+
+                <p class="text-green-600 text-sm mt-3">
+                    ✔ Updated
+                </p>
+
+            </div>
+
+            <div class="text-6xl">
+                💱
+            </div>
+
+        </div>
+
+    </div>
+
+    {{-- News --}}
+    <div class="bg-white rounded-2xl shadow-lg p-6 hover:shadow-xl transition">
+
+        <div class="flex justify-between items-center">
+
+            <div>
+
+                <p class="text-gray-500">
+                    News
+                </p>
+
+                <h2 class="text-5xl font-bold text-yellow-500 mt-3">
+                    {{ $newsCount }}
+                </h2>
+
+                <p class="text-green-600 text-sm mt-3">
+                    ✔ Live API
+                </p>
+
+            </div>
+
+            <div class="text-6xl">
+                📰
+            </div>
+
+        </div>
+
+    </div>
+
+    {{-- Risk --}}
+    <div class="bg-white rounded-2xl shadow-lg p-6 hover:shadow-xl transition">
+
+        <div class="flex justify-between items-center">
+
+            <div>
+
+                <p class="text-gray-500">
+                    Risk Score
+                </p>
+
+                <h2 class="text-5xl font-bold text-red-500 mt-3">
+                    LOW
+                </h2>
+
+                <p class="text-gray-500 text-sm mt-3">
+                    Coming Soon
+                </p>
+
+            </div>
+
+            <div class="text-6xl">
+                📈
+            </div>
+
+        </div>
+
+    </div>
 
 </div>
 
-   <div class="bg-white rounded-xl shadow p-5">
+{{-- Table + News --}}
+<div class="grid grid-cols-1 xl:grid-cols-2 gap-6">
 
-    <h2 class="text-gray-500">
-        📰 News
-    </h2>
+    {{-- Latest Countries --}}
+    <div class="bg-white rounded-2xl shadow-lg p-6">
 
-    <h1 class="text-xl font-bold mt-4 text-yellow-600">
+        <h2 class="text-xl font-bold mb-5">
+            🌍 Latest Countries
+        </h2>
 
-        Coming Soon
+        <table class="w-full">
 
-    </h1>
+            <thead>
 
-</div>
+                <tr class="border-b">
 
-    <div class="bg-white rounded-xl shadow p-5">
+                    <th class="text-left py-3">
+                        Country
+                    </th>
 
-    <h2 class="text-gray-500">
-        📈 Risk Score
-    </h2>
+                    <th class="text-left">
+                        Code
+                    </th>
 
-    <h1 class="text-xl font-bold mt-4 text-gray-500">
+                    <th class="text-left">
+                        Currency
+                    </th>
 
-        Coming Soon
+                </tr>
 
-    </h1>
+            </thead>
+
+            <tbody>
+
+                @foreach($latestCountries as $country)
+
+                <tr class="border-b hover:bg-gray-50">
+
+                    <td class="py-3">
+
+                        <div class="flex items-center gap-3">
+
+                            @if($country->flag)
+
+                                <img src="{{ $country->flag }}"
+                                     class="w-8 h-6 rounded shadow">
+
+                            @endif
+
+                            {{ $country->name }}
+
+                        </div>
+
+                    </td>
+
+                    <td>
+
+                        {{ $country->code }}
+
+                    </td>
+
+                    <td>
+
+                        {{ $country->currency }}
+
+                    </td>
+
+                </tr>
+
+                @endforeach
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+    {{-- Latest News --}}
+    <div class="bg-white rounded-2xl shadow-lg p-6">
+
+        <h2 class="text-xl font-bold mb-5">
+            📰 Latest News
+        </h2>
+
+        @forelse($latestNews as $news)
+
+            <div class="border rounded-xl p-4 mb-4 hover:bg-gray-50 transition">
+
+                <h3 class="font-semibold">
+
+                    {{ $news->title }}
+
+                </h3>
+
+                <p class="text-gray-500 text-sm mt-2">
+
+                    {{ \Illuminate\Support\Str::limit($news->description,120) }}
+
+                </p>
+
+                <div class="flex justify-between mt-4 text-sm">
+
+                    <span class="text-blue-600">
+
+                        {{ $news->source }}
+
+                    </span>
+
+                    <span class="text-gray-400">
+
+                        {{ \Carbon\Carbon::parse($news->published_at)->diffForHumans() }}
+
+                    </span>
+
+                </div>
+
+            </div>
+
+        @empty
+
+            <p class="text-gray-500">
+
+                Belum ada berita.
+
+            </p>
+
+        @endforelse
+
+    </div>
 
 </div>
 

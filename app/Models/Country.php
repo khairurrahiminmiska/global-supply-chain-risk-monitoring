@@ -14,6 +14,13 @@ class Country extends Model
         'currency',
         'population',
         'flag',
+        'gdp',
+
+'inflation',
+
+'exports',
+
+'imports',
     ];
 
     public function exchangeRates()
@@ -24,5 +31,15 @@ class Country extends Model
     public function news()
 {
     return $this->hasMany(News::class);
+}
+
+    public function weather()
+{
+    return $this->hasOne(Weather::class);
+}
+
+    public function riskScore()
+{
+    return $this->hasOne(RiskScore::class);
 }
 }

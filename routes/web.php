@@ -4,18 +4,16 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CountryController;
 use Illuminate\Support\Facades\Route;
 use App\Models\Country;
+use App\Http\Controllers\DashboardController;
+
 
 Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/dashboard', function () {
-
-    $totalCountries = Country::count();
-
-    return view('dashboard', compact('totalCountries'));
-
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard', [DashboardController::class, 'index'])
+    ->middleware(['auth', 'verified'])
+    ->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -42,5 +40,20 @@ Route::post('/countries/{country}/news', [CountryController::class, 'syncNews'])
     ->name('countries.news.sync')
     ->middleware('auth');
 
+Route::post(
+    '/countries/{country}/economy',
+    [CountryController::class, 'syncEconomy']
+)->name('countries.economy');
+
+Route::post(
+    '/countries/{country}/weather',
+    [CountryController::class,'syncWeather']
+)->name('countries.weather.sync');
+
+Route::post(
+    '/countries/{country}/risk',
+    [CountryController::class,'calculateRisk']
+)->middleware('auth')
+ ->name('countries.risk.calculate');
 
 require __DIR__.'/auth.php';
