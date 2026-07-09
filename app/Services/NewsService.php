@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Country;
 use App\Models\News;
 use Illuminate\Support\Facades\Http;
+use App\Services\SentimentService;
 
 class NewsService
 {
@@ -36,21 +37,53 @@ class NewsService
         }
 
         // Hapus berita lama negara ini agar tidak menumpuk
-        News::where('country_id', $country->id)->delete();
+        $sentimentService = new SentimentService();
 
-        foreach ($json['results'] as $item) {
+foreach ($json['results'] as $item) {
 
-            News::create([
-                'country_id'  => $country->id,
-                'title'       => $item['title'] ?? '',
-                'description' => $item['description'] ?? '',
-                'source'      => parse_url($item['link'] ?? '', PHP_URL_HOST),
-                'url'         => $item['link'] ?? '',
-                'image'       => null,
-                'published_at'=> $item['pubDate'] ?? now(),
-            ]);
+    $content =
 
-        }
+        ($item['title'] ?? '') . ' ' .
+
+        ($item['description'] ?? '');
+
+    $result = $sentimentService->analyze($content);
+
+    News::updateOrCreate(
+
+        [
+
+            'url' => $item['link'] ?? ''
+
+        ],
+
+        [
+
+            'country_id' => $country->id,
+
+            'title' => $item['title'] ?? '',
+
+            'description' => $item['description'] ?? '',
+
+            'source' => parse_url($item['link'] ?? '', PHP_URL_HOST),
+
+            'url' => $item['link'] ?? '',
+
+            'image' => null,
+
+            'published_at' => $item['pubDate'] ?? now(),
+
+            'positive_score' => $result['positive'],
+
+            'negative_score' => $result['negative'],
+
+            'sentiment' => $result['sentiment']
+
+        ]
+
+    );
+
+}
 
         return true;
     }

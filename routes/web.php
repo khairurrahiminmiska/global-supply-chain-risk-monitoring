@@ -56,4 +56,7 @@ Route::post(
 )->middleware('auth')
  ->name('countries.risk.calculate');
 
+ Route::get('/dashboard/chart-data', [DashboardController::class, 'chartData'])
+    ->name('dashboard.chart');
+
 require __DIR__.'/auth.php';

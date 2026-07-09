@@ -7,46 +7,100 @@ use Illuminate\Support\Facades\Http;
 
 class CountryService
 {
-    /**
-     * Mengambil data negara dari REST Countries API
-     * lalu menyimpannya ke database.
-     */
     public function syncCountries()
     {
-        $response = Http::timeout(30)->get(
-            'https://restcountries.com/v3.1/all?fields=name,cca2,capital,region,currencies,population,flags'
+        $response = Http::get(
+            'https://restcountries.com/v3.1/all'
         );
 
         if (!$response->successful()) {
-            dd($response->status(), $response->body());
+            return;
         }
 
         $countries = $response->json();
 
+        dd(count($countries));
+
+        $allowed = [
+
+            'Indonesia',
+            'Malaysia',
+            'Singapore',
+            'Thailand',
+            'Vietnam',
+
+            'China',
+            'Japan',
+
+            'Korea, Republic of',
+            'South Korea',
+
+            'India',
+
+            'Australia',
+            'New Zealand',
+
+            'Germany',
+            'France',
+            'Italy',
+            'Spain',
+            'Netherlands',
+
+            'United Kingdom',
+
+            'United States',
+            'United States of America',
+
+            'Canada',
+            'Mexico',
+
+            'Brazil',
+            'Argentina',
+
+            'Saudi Arabia',
+
+            'United Arab Emirates',
+
+            'South Africa',
+
+        ];
+
         foreach ($countries as $country) {
 
-            // Lewati jika tidak memiliki kode negara
-            if (empty($country['cca2'])) {
+            $name = $country['name']['common'] ?? '';
+
+            if (!in_array($name, $allowed)) {
                 continue;
             }
 
             Country::updateOrCreate(
-                [
-                    'code' => $country['cca2'],
-                ],
-                [
-                    'name'       => $country['name']['common'] ?? '',
-                    'capital'    => $country['capital'][0] ?? '',
-                    'region'     => $country['region'] ?? '',
-                    'currency'   => isset($country['currencies'])
-                        ? implode(', ', array_keys($country['currencies']))
-                        : '',
-                    'population' => $country['population'] ?? 0,
-                    'flag'       => $country['flags']['png'] ?? '',
-                ]
-            );
-        }
 
-        return true;
+                [
+
+                    'code' => $country['cca2']
+
+                ],
+
+                [
+
+                    'name' => $name,
+
+                    'capital' => $country['capital'][0] ?? '-',
+
+                    'region' => $country['region'] ?? '-',
+
+                    'currency' => array_key_first(
+                        $country['currencies'] ?? []
+                    ) ?? '-',
+
+                    'population' => $country['population'] ?? 0,
+
+                    'flag' => $country['flags']['png'] ?? '',
+
+                ]
+
+            );
+
+        }
     }
 }

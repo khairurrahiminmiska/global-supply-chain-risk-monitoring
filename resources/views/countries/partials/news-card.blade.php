@@ -91,6 +91,48 @@
 
             </p>
 
+            <div class="mt-3 flex gap-2">
+
+    <span class="px-3 py-1 bg-green-100 rounded">
+
+        👍 {{ $item->positive_score }}
+
+    </span>
+
+    <span class="px-3 py-1 bg-red-100 rounded">
+
+        👎 {{ $item->negative_score }}
+
+    </span>
+
+    @if($item->sentiment == 'Positive')
+
+        <span class="px-3 py-1 bg-green-600 text-white rounded">
+
+            Positive
+
+        </span>
+
+    @elseif($item->sentiment == 'Negative')
+
+        <span class="px-3 py-1 bg-red-600 text-white rounded">
+
+            Negative
+
+        </span>
+
+    @else
+
+        <span class="px-3 py-1 bg-gray-600 text-white rounded">
+
+            Neutral
+
+        </span>
+
+    @endif
+
+</div>
+
             <div class="flex justify-between items-center mt-5">
 
                 <div>

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Country;
 use App\Models\ExchangeRate;
 use App\Models\News;
+use App\Models\RiskScore;
 
 class DashboardController extends Controller
 {
@@ -32,4 +33,35 @@ class DashboardController extends Controller
             'latestNews'
         ));
     }
+
+    public function chartData()
+{
+    $countries = Country::orderBy('name')->get();
+
+    return response()->json([
+
+        'labels' => $countries->pluck('name'),
+
+        'gdp' => $countries->pluck('gdp'),
+
+        'inflation' => $countries->pluck('inflation'),
+
+        'currency' => $countries->map(function ($country) {
+
+            return ExchangeRate::where('country_id', $country->id)
+                ->latest()
+                ->value('rate') ?? 0;
+
+        }),
+
+        'risk' => $countries->map(function ($country) {
+
+            return RiskScore::where('country_id', $country->id)
+                ->latest()
+                ->value('total_score') ?? 0;
+
+        })
+
+    ]);
+}
 }

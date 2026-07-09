@@ -16,8 +16,6 @@
 
     @include('countries.partials.risk-card')
 
-    @include('countries.partials.risk-card')
-
 </div>
 
 @endsection

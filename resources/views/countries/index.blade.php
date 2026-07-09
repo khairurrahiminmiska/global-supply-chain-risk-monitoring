@@ -2,121 +2,215 @@
 
 @section('content')
 
-<div class="flex justify-between items-center mb-6">
+<div class="space-y-6">
 
-    <h2 class="text-3xl font-bold">
-        🌍 Countries
-    </h2>
+    {{-- Header --}}
+    <div class="flex items-center justify-between">
 
-    <form method="GET" action="{{ route('countries.index') }}">
+        <div>
 
-        <input
-            type="text"
-            name="search"
-            value="{{ request('search') }}"
-            placeholder="Search country..."
-            class="border rounded-lg px-4 py-2">
+            <h1 class="text-4xl font-bold text-slate-800">
+                🌍 Countries
+            </h1>
 
-        <button
-            class="bg-blue-600 text-white px-4 py-2 rounded-lg">
+            <p class="text-gray-500 mt-2">
+                Global Supply Chain Monitoring Countries
+            </p>
 
-            Search
+        </div>
 
-        </button>
+        <form action="{{ route('countries.sync') }}" method="POST">
 
-    </form>
+            @csrf
 
-</div>
+            <button
+                type="submit"
+                class="bg-blue-600 hover:bg-blue-700 transition text-white px-6 py-3 rounded-xl shadow-lg">
 
-<div class="bg-white rounded-xl shadow overflow-hidden">
+                🌍 Sync Countries
 
-    <table class="w-full">
+            </button>
 
-        <thead class="bg-slate-100">
+        </form>
 
-            <tr>
+    </div>
 
-                <th class="p-4">Flag</th>
 
-                <th class="p-4">Country</th>
+    {{-- Card --}}
+    <div class="bg-white rounded-2xl shadow-lg p-6">
 
-                <th class="p-4">Code</th>
+        {{-- Search --}}
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-5 mb-6">
 
-                <th class="p-4">Region</th>
+            <form
+                action="{{ route('countries.index') }}"
+                method="GET"
+                class="flex gap-3">
 
-                <th class="p-4">Currency</th>
+                <input
+                    type="text"
+                    name="search"
+                    value="{{ request('search') }}"
+                    placeholder="Search country..."
+                    class="border border-slate-300 rounded-xl px-4 py-3 w-80 focus:ring-2 focus:ring-blue-500 focus:outline-none">
 
-                <th class="p-4">Population</th>
+                <button
+                    class="bg-slate-800 hover:bg-slate-900 text-white px-6 rounded-xl transition">
 
-                <th class="p-4">Action</th>
+                    Search
 
-            </tr>
+                </button>
 
-        </thead>
+            </form>
 
-        <tbody>
+            <div class="text-gray-500 font-semibold">
 
-        @forelse($countries as $country)
+                Total :
+                <span class="text-blue-600">
+                    {{ $countries->total() }}
+                </span>
 
-            <tr class="border-t">
+            </div>
 
-                <td class="p-3">
+        </div>
 
-                    @if($country->flag)
 
-                        <img src="{{ $country->flag }}" width="40">
+        {{-- Table --}}
+        <div class="overflow-x-auto">
 
-                    @endif
+            <table class="min-w-full">
 
-                </td>
+                <thead class="bg-slate-100 text-slate-700">
 
-                <td>{{ $country->name }}</td>
+                    <tr>
 
-                <td>{{ $country->code }}</td>
+                        <th class="px-6 py-4 text-left">Flag</th>
+                        <th class="px-6 py-4 text-left">Country</th>
+                        <th class="px-6 py-4 text-left">Code</th>
+                        <th class="px-6 py-4 text-left">Region</th>
+                        <th class="px-6 py-4 text-left">Currency</th>
+                        <th class="px-6 py-4 text-right">Population</th>
+                        <th class="px-6 py-4 text-center">Action</th>
 
-                <td>{{ $country->region }}</td>
+                    </tr>
 
-                <td>{{ $country->currency }}</td>
+                </thead>
 
-                <td>{{ number_format($country->population) }}</td>
+                <tbody>
 
-                <td>
+                @forelse($countries as $country)
 
-                    <a
-                        href="{{ route('countries.show',$country) }}"
-                        class="bg-blue-600 text-white px-3 py-2 rounded">
+                    <tr class="border-b hover:bg-slate-50 transition">
 
-                        Detail
+                        <td class="px-6 py-4">
 
-                    </a>
+                            @if($country->flag)
 
-                </td>
+                                <img
+                                    src="{{ $country->flag }}"
+                                    class="w-14 h-10 rounded shadow object-cover">
 
-            </tr>
+                            @else
 
-        @empty
+                                <div
+                                    class="w-14 h-10 rounded bg-slate-200 flex items-center justify-center">
 
-            <tr>
+                                    🌍
 
-                <td colspan="7" class="text-center p-8">
+                                </div>
 
-                    Tidak ada data.
+                            @endif
 
-                </td>
+                        </td>
 
-            </tr>
+                        <td class="px-6 py-4">
 
-        @endforelse
+                            <div class="font-bold text-slate-800">
 
-        </tbody>
+                                {{ $country->name }}
 
-    </table>
+                            </div>
 
-</div>
+                        </td>
 
-<div class="mt-5">
+                        <td class="px-6 py-4">
 
-    {{ $countries->links() }}
+                            <span class="bg-slate-100 px-3 py-1 rounded-lg">
+
+                                {{ $country->code }}
+
+                            </span>
+
+                        </td>
+
+                        <td class="px-6 py-4">
+
+                            <span class="bg-blue-50 text-blue-700 px-3 py-1 rounded-lg">
+
+                                {{ $country->region }}
+
+                            </span>
+
+                        </td>
+
+                        <td class="px-6 py-4">
+
+                            <span class="bg-green-50 text-green-700 px-3 py-1 rounded-lg">
+
+                                {{ $country->currency }}
+
+                            </span>
+
+                        </td>
+
+                        <td class="px-6 py-4 text-right font-semibold">
+
+                            {{ number_format($country->population) }}
+
+                        </td>
+
+                        <td class="px-6 py-4 text-center">
+
+                            <a
+                                href="{{ route('countries.show',$country) }}"
+                                class="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-xl transition shadow">
+
+                                Detail
+
+                            </a>
+
+                        </td>
+
+                    </tr>
+
+                @empty
+
+                    <tr>
+
+                        <td colspan="7" class="text-center py-14 text-gray-500">
+
+                            🌍 Belum ada data negara.
+
+                        </td>
+
+                    </tr>
+
+                @endforelse
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+        {{-- Pagination --}}
+        <div class="mt-8">
+
+            {{ $countries->links() }}
+
+        </div>
+
+    </div>
 
 </div>
 
