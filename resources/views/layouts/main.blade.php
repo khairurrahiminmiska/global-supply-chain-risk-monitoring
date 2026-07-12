@@ -43,12 +43,11 @@
 
             </a>
 
-            <a href="#"
-               class="block px-6 py-3 hover:bg-slate-700">
+            <a href="{{ route('ports.index') }}"
+             class="block px-6 py-3 hover:bg-slate-700">
 
-                ⚓ Ports
+                 🚢 Ports
 
-            </a>
 
             <a href="#"
                class="block px-6 py-3 hover:bg-slate-700">

@@ -5,6 +5,9 @@ use App\Http\Controllers\CountryController;
 use Illuminate\Support\Facades\Route;
 use App\Models\Country;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\PortController;
+use App\Http\Controllers\PortDashboardController;
+
 
 
 Route::get('/', function () {
@@ -58,5 +61,14 @@ Route::post(
 
  Route::get('/dashboard/chart-data', [DashboardController::class, 'chartData'])
     ->name('dashboard.chart');
+
+Route::post('/ports/import',[PortController::class,'import'])
+    ->name('ports.import');
+
+Route::get('/ports',[
+    PortDashboardController::class,
+    'index'
+])->name('ports.index');
+
 
 require __DIR__.'/auth.php';
