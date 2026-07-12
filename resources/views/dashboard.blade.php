@@ -132,42 +132,71 @@
         </div>
 
 
-        {{-- Risk --}}
-        <div class="bg-white rounded-2xl shadow-lg p-6">
+        {{-- GLOBAL RISK --}}
 
-            <div class="flex justify-between">
+<a
+    href="{{ route('risk.analytics') }}"
+    class="block bg-white rounded-2xl shadow-lg p-6 hover:shadow-xl transition"
+>
 
-                <div>
+    <div class="flex justify-between">
 
-                    <p class="text-gray-500">
+        <div>
 
-                        Risk Score
+            <p class="text-gray-500">
+                Global Risk Score
+            </p>
 
-                    </p>
+            <h1 class="
+                text-5xl font-bold mt-3
 
-                    <h1 class="text-5xl font-bold text-red-500 mt-3">
+                @if($globalRiskLevel === 'HIGH')
+                    text-red-500
+                @elseif($globalRiskLevel === 'MEDIUM')
+                    text-orange-500
+                @else
+                    text-green-500
+                @endif
+            ">
 
-                        LOW
+                {{ $globalRiskLevel }}
 
-                    </h1>
+            </h1>
 
-                    <p class="text-gray-500 text-sm mt-3">
+            <p class="text-gray-500 text-sm mt-3">
 
-                        Coming Soon
+                Average Score:
+                <span class="font-bold text-slate-700">
+                    {{ $averageRiskScore }}
+                </span>
 
-                    </p>
+            </p>
 
-                </div>
+            <div class="flex gap-3 mt-3 text-xs">
 
-                <div class="text-6xl">
+                <span class="text-red-600">
+                    🔴 {{ $highRiskCount }} High
+                </span>
 
-                    📈
+                <span class="text-orange-600">
+                    🟠 {{ $mediumRiskCount }} Medium
+                </span>
 
-                </div>
+                <span class="text-green-600">
+                    🟢 {{ $lowRiskCount }} Low
+                </span>
 
             </div>
 
         </div>
+
+        <div class="text-6xl">
+            📈
+        </div>
+
+    </div>
+
+</a>
 
     </div>
 

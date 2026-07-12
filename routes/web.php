@@ -7,6 +7,8 @@ use App\Models\Country;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PortController;
 use App\Http\Controllers\PortDashboardController;
+use App\Http\Controllers\RiskScoreController;
+use App\Http\Controllers\RiskDashboardController;
 
 
 
@@ -70,5 +72,14 @@ Route::get('/ports',[
     'index'
 ])->name('ports.index');
 
+Route::get('/risk-score', [
+    RiskScoreController::class,
+    'index'
+])->name('risk.index');
+
+Route::get('/risk-analytics', [
+    RiskDashboardController::class,
+    'index'
+])->name('risk.analytics');
 
 require __DIR__.'/auth.php';

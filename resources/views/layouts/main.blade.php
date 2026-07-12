@@ -63,12 +63,20 @@
 
             </a>
 
-            <a href="#"
-               class="block px-6 py-3 hover:bg-slate-700">
+            <a href="{{ route('risk.index') }}"
+   class="flex items-center gap-3 px-6 py-4 transition
+   {{ request()->routeIs('risk.*')
+        ? 'bg-slate-700 text-white'
+        : 'text-slate-200 hover:bg-slate-700 hover:text-white'
+   }}">
 
-                📈 Risk Score
+    <span>📈</span>
 
-            </a>
+    <span>
+        Risk Score
+    </span>
+
+</a>
 
         </nav>
 
@@ -90,29 +98,25 @@
 
                 <div class="flex items-center gap-3">
 
-                    <div class="text-right">
+    <div class="text-right">
 
-                        <p class="font-semibold">
+        <p class="font-semibold">
+            {{ Auth::user()?->name ?? 'Administrator' }}
+        </p>
 
-                            {{ Auth::user()->name }}
+        <p class="text-sm text-gray-500">
+            Administrator
+        </p>
 
-                        </p>
+    </div>
 
-                        <p class="text-sm text-gray-500">
+    <div class="w-10 h-10 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold">
 
-                            Administrator
+        {{ strtoupper(substr(Auth::user()?->name ?? 'Administrator', 0, 1)) }}
 
-                        </p>
+    </div>
 
-                    </div>
-
-                    <div class="w-10 h-10 rounded-full bg-blue-600 text-white flex items-center justify-center">
-
-                        {{ strtoupper(substr(Auth::user()->name,0,1)) }}
-
-                    </div>
-
-                </div>
+</div>
 
             </div>
 

@@ -38,6 +38,11 @@ class Country extends Model
     return $this->hasOne(Weather::class);
 }
 
+    public function ports()
+{
+    return $this->hasMany(Port::class);
+}
+
     public function riskScore()
 {
     return $this->hasOne(RiskScore::class);

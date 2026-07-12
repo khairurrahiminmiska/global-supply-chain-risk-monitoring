@@ -25,43 +25,87 @@ class DashboardController extends Controller
             ->take(5)
             ->get();
 
+        /*
+        |--------------------------------------------------------------------------
+        | Risk Statistics
+        |--------------------------------------------------------------------------
+        */
+
+        $averageRiskScore = round(
+            RiskScore::avg('total_score') ?? 0,
+            1
+        );
+
+        $highRiskCount = RiskScore::where(
+            'risk_level',
+            'HIGH'
+        )->count();
+
+        $mediumRiskCount = RiskScore::where(
+            'risk_level',
+            'MEDIUM'
+        )->count();
+
+        $lowRiskCount = RiskScore::where(
+            'risk_level',
+            'LOW'
+        )->count();
+
+        $globalRiskLevel = match (true) {
+            $averageRiskScore >= 70 => 'HIGH',
+            $averageRiskScore >= 40 => 'MEDIUM',
+            default => 'LOW',
+        };
+
         return view('dashboard', compact(
             'countryCount',
             'exchangeRateCount',
             'newsCount',
             'latestCountries',
-            'latestNews'
+            'latestNews',
+            'averageRiskScore',
+            'highRiskCount',
+            'mediumRiskCount',
+            'lowRiskCount',
+            'globalRiskLevel'
         ));
     }
 
+
     public function chartData()
-{
-    $countries = Country::orderBy('name')->get();
+    {
+        $countries = Country::orderBy('name')->get();
 
-    return response()->json([
+        return response()->json([
 
-        'labels' => $countries->pluck('name'),
+            'labels' => $countries->pluck('name'),
 
-        'gdp' => $countries->pluck('gdp'),
+            'gdp' => $countries->pluck('gdp'),
 
-        'inflation' => $countries->pluck('inflation'),
+            'inflation' => $countries->pluck('inflation'),
 
-        'currency' => $countries->map(function ($country) {
+            'currency' => $countries->map(function ($country) {
 
-            return ExchangeRate::where('country_id', $country->id)
-                ->latest()
-                ->value('rate') ?? 0;
+                return ExchangeRate::where(
+                    'country_id',
+                    $country->id
+                )
+                    ->latest()
+                    ->value('rate') ?? 0;
 
-        }),
+            }),
 
-        'risk' => $countries->map(function ($country) {
+            'risk' => $countries->map(function ($country) {
 
-            return RiskScore::where('country_id', $country->id)
-                ->latest()
-                ->value('total_score') ?? 0;
+                return RiskScore::where(
+                    'country_id',
+                    $country->id
+                )
+                    ->latest()
+                    ->value('total_score') ?? 0;
 
-        })
+            }),
 
-    ]);
-}
+        ]);
+    }
 }

@@ -9,7 +9,6 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('risk_scores', function (Blueprint $table) {
-
             $table->id();
 
             $table->foreignId('country_id')
@@ -17,13 +16,9 @@ return new class extends Migration
                 ->cascadeOnDelete();
 
             $table->integer('weather_score')->default(0);
-
             $table->integer('inflation_score')->default(0);
-
             $table->integer('currency_score')->default(0);
-
             $table->integer('news_score')->default(0);
-
             $table->integer('total_score')->default(0);
 
             $table->string('risk_level')->default('LOW');
@@ -31,7 +26,6 @@ return new class extends Migration
             $table->timestamp('calculated_at')->nullable();
 
             $table->timestamps();
-
         });
     }
 
