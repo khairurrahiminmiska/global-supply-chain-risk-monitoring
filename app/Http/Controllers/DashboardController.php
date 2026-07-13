@@ -6,6 +6,7 @@ use App\Models\Country;
 use App\Models\ExchangeRate;
 use App\Models\News;
 use App\Models\RiskScore;
+use App\Models\RiskHistory;
 
 class DashboardController extends Controller
 {
@@ -73,39 +74,46 @@ class DashboardController extends Controller
 
 
     public function chartData()
-    {
-        $countries = Country::orderBy('name')->get();
+{
+    $countries = Country::orderBy('name')->get();
 
-        return response()->json([
+    $riskHistories = RiskHistory::query()
+        ->selectRaw("
+            DATE_FORMAT(calculated_at, '%Y-%m-%d %H:%i:%s') as period,
+            AVG(total_score) as average_score
+        ")
+        ->groupBy('period')
+        ->orderBy('period')
+        ->get();
 
-            'labels' => $countries->pluck('name'),
+    return response()->json([
 
-            'gdp' => $countries->pluck('gdp'),
+        'labels' => $countries->pluck('name'),
 
-            'inflation' => $countries->pluck('inflation'),
+        'gdp' => $countries->pluck('gdp'),
 
-            'currency' => $countries->map(function ($country) {
+        'inflation' => $countries->pluck('inflation'),
 
-                return ExchangeRate::where(
-                    'country_id',
-                    $country->id
-                )
-                    ->latest()
-                    ->value('rate') ?? 0;
+        'currency' => $countries->map(function ($country) {
 
-            }),
+            return ExchangeRate::where(
+                'country_id',
+                $country->id
+            )
+                ->latest('retrieved_at')
+                ->value('rate') ?? 0;
 
-            'risk' => $countries->map(function ($country) {
+        }),
 
-                return RiskScore::where(
-                    'country_id',
-                    $country->id
-                )
-                    ->latest()
-                    ->value('total_score') ?? 0;
+        'risk_labels' => $riskHistories->map(function ($history) {
+            return \Carbon\Carbon::parse($history->period)
+                ->format('d M H:i:s');
+        }),
 
-            }),
+        'risk' => $riskHistories->map(function ($history) {
+            return round((float) $history->average_score, 2);
+        }),
 
-        ]);
-    }
+    ]);
+}
 }

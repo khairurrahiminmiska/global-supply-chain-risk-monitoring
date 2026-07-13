@@ -3,58 +3,63 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\Country;
+use App\Models\RiskScore;
 use Illuminate\Http\Request;
 
 class RiskApiController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Country::query();
+        $query = RiskScore::query()
+            ->with('country');
 
         if ($request->filled('country_id')) {
-            $query->where('id', $request->country_id);
+            $query->where(
+                'country_id',
+                $request->integer('country_id')
+            );
         }
 
-        $countries = $query->get();
+        if ($request->filled('level')) {
+            $query->where(
+                'risk_level',
+                strtoupper($request->level)
+            );
+        }
 
-        $risks = $countries->map(function ($country) {
+        $riskScores = $query
+            ->orderByDesc('total_score')
+            ->get();
 
-            $inflation = (float) ($country->inflation ?? 0);
-
-            $score = 0;
-
-            if ($inflation >= 10) {
-                $score += 70;
-            } elseif ($inflation >= 5) {
-                $score += 40;
-            } else {
-                $score += 20;
-            }
-
-            if ($score >= 70) {
-                $level = 'HIGH';
-            } elseif ($score >= 40) {
-                $level = 'MEDIUM';
-            } else {
-                $level = 'LOW';
-            }
-
+        $risks = $riskScores->map(function (RiskScore $risk) {
             return [
-                'country_id' => $country->id,
-                'country' => $country->name,
-                'risk_score' => $score,
-                'risk_level' => $level,
+                'country_id' => $risk->country_id,
+
+                'country' => $risk->country?->name ?? 'Unknown',
+
+                'risk_score' => $risk->total_score,
+
+                'risk_level' => $risk->risk_level,
+
                 'indicators' => [
-                    'inflation' => $inflation,
+                    'weather_score' => $risk->weather_score,
+                    'inflation_score' => $risk->inflation_score,
+                    'currency_score' => $risk->currency_score,
+                    'news_score' => $risk->news_score,
+                    'port_score' => $risk->port_score,
                 ],
+
+                'calculated_at' => $risk->calculated_at,
             ];
         });
 
         return response()->json([
             'success' => true,
+
             'message' => 'Supply chain risk data retrieved successfully.',
+
             'total' => $risks->count(),
+
             'data' => $risks,
         ]);
     }

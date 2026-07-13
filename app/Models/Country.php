@@ -47,4 +47,9 @@ class Country extends Model
 {
     return $this->hasOne(RiskScore::class);
 }
+
+    public function riskHistories()
+{
+    return $this->hasMany(RiskHistory::class);
+}
 }

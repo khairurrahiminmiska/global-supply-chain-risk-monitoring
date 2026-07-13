@@ -9,7 +9,7 @@ use App\Services\ExchangeRateService;
 use App\Services\NewsService;
 use App\Services\WorldBankService;
 use App\Services\WeatherService;
-use App\Services\RiskScoreService;
+use App\Services\RiskScoringService;
 
 class CountryController extends Controller
 {
@@ -139,7 +139,7 @@ public function syncNews(
      
     public function calculateRisk(
     Country $country,
-    RiskScoreService $service
+    RiskScoringService $service
 )
 {
     $service->calculate($country);

@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Country;
 use App\Models\RiskScore;
+use App\Models\RiskHistory;
 
 class RiskScoringService
 {
@@ -59,21 +60,35 @@ class RiskScoringService
             default => 'LOW',
         };
 
-        return RiskScore::updateOrCreate(
-            [
-                'country_id' => $country->id,
-            ],
-            [
-                'weather_score' => $weatherScore,
-                'inflation_score' => $inflationScore,
-                'currency_score' => $currencyScore,
-                'news_score' => $newsScore,
-                'port_score' => $portScore,
-                'total_score' => $totalScore,
-                'risk_level' => $riskLevel,
-                'calculated_at' => now(),
-            ]
-        );
+        $riskScore = RiskScore::updateOrCreate(
+    [
+        'country_id' => $country->id,
+    ],
+    [
+        'weather_score' => $weatherScore,
+        'inflation_score' => $inflationScore,
+        'currency_score' => $currencyScore,
+        'news_score' => $newsScore,
+        'port_score' => $portScore,
+        'total_score' => $totalScore,
+        'risk_level' => $riskLevel,
+        'calculated_at' => now(),
+    ]
+);
+
+RiskHistory::create([
+    'country_id' => $country->id,
+    'weather_score' => $weatherScore,
+    'inflation_score' => $inflationScore,
+    'currency_score' => $currencyScore,
+    'news_score' => $newsScore,
+    'port_score' => $portScore,
+    'total_score' => $totalScore,
+    'risk_level' => $riskLevel,
+    'calculated_at' => now(),
+]);
+
+return $riskScore;
     }
 
     /*

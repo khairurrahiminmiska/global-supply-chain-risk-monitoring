@@ -77,6 +77,11 @@ Route::get('/risk-score', [
     'index'
 ])->name('risk.index');
 
+Route::get('/risk-score/{riskScore}', [
+    RiskScoreController::class,
+    'show'
+])->name('risk.show');
+
 Route::get('/risk-analytics', [
     RiskDashboardController::class,
     'index'

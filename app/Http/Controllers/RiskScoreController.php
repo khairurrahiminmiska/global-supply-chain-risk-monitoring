@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\RiskScore;
 use Illuminate\Http\Request;
+use App\Models\RiskHistory;
 
 class RiskScoreController extends Controller
 {
@@ -44,4 +45,33 @@ class RiskScoreController extends Controller
             'highRisk'
         ));
     }
+
+    public function show(RiskScore $riskScore)
+{
+    $riskScore->load('country');
+
+    $riskHistories = \App\Models\RiskHistory::where(
+        'country_id',
+        $riskScore->country_id
+    )
+        ->orderBy('calculated_at')
+        ->get();
+
+    $chartLabels = $riskHistories
+        ->map(function ($history) {
+            return $history->calculated_at
+                ? $history->calculated_at->format('d M H:i:s')
+                : '-';
+        });
+
+    $chartScores = $riskHistories
+        ->pluck('total_score');
+
+    return view('risk.show', compact(
+        'riskScore',
+        'riskHistories',
+        'chartLabels',
+        'chartScores'
+    ));
+}
 }

@@ -397,8 +397,102 @@
 
         </div>
 
-    </div>
+        </div>
 
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', async function () {
+    try {
+        const response = await fetch("{{ route('dashboard.chart') }}");
+        const data = await response.json();
+
+        new Chart(document.getElementById('gdpChart'), {
+            type: 'bar',
+            data: {
+                labels: data.labels,
+                datasets: [{
+                    label: 'GDP',
+                    data: data.gdp
+                }]
+            }
+        });
+
+        new Chart(document.getElementById('inflationChart'), {
+            type: 'line',
+            data: {
+                labels: data.labels,
+                datasets: [{
+                    label: 'Inflation (%)',
+                    data: data.inflation,
+                    tension: 0.4
+                }]
+            }
+        });
+
+        new Chart(document.getElementById('currencyChart'), {
+            type: 'bar',
+            data: {
+                labels: data.labels,
+                datasets: [{
+                    label: 'Exchange Rate vs USD',
+                    data: data.currency
+                }]
+            }
+        });
+
+        new Chart(document.getElementById('riskChart'), {
+            type: 'line',
+            data: {
+                labels: data.risk_labels,
+                datasets: [{
+                    label: 'Average Risk Score',
+                    data: data.risk,
+                    tension: 0.4,
+                    fill: false,
+                    pointRadius: 5,
+                    pointHoverRadius: 7
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return 'Average Risk Score: ' + context.raw;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 100,
+                        title: {
+                            display: true,
+                            text: 'Risk Score'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Calculation Time'
+                        }
+                    }
+                }
+            }
+        });
+
+    } catch (error) {
+        console.error('Dashboard chart error:', error);
+    }
+});
+</script>
+
 @endsection
+
+
+
