@@ -3,8 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\RiskScore;
-use Illuminate\Http\Request;
 use App\Models\RiskHistory;
+use App\Services\RiskRecommendationService;
+use Illuminate\Http\Request;
 
 class RiskScoreController extends Controller
 {
@@ -31,11 +32,20 @@ class RiskScoreController extends Controller
 
         $totalCountries = RiskScore::count();
 
-        $lowRisk = RiskScore::where('risk_level', 'LOW')->count();
+        $lowRisk = RiskScore::where(
+            'risk_level',
+            'LOW'
+        )->count();
 
-        $mediumRisk = RiskScore::where('risk_level', 'MEDIUM')->count();
+        $mediumRisk = RiskScore::where(
+            'risk_level',
+            'MEDIUM'
+        )->count();
 
-        $highRisk = RiskScore::where('risk_level', 'HIGH')->count();
+        $highRisk = RiskScore::where(
+            'risk_level',
+            'HIGH'
+        )->count();
 
         return view('risk.index', compact(
             'riskScores',
@@ -46,32 +56,44 @@ class RiskScoreController extends Controller
         ));
     }
 
-    public function show(RiskScore $riskScore)
-{
-    $riskScore->load('country');
+    public function show(
+        RiskScore $riskScore,
+        RiskRecommendationService $recommendationService
+    ) {
+        $riskScore->load('country');
 
-    $riskHistories = \App\Models\RiskHistory::where(
-        'country_id',
-        $riskScore->country_id
-    )
-        ->orderBy('calculated_at')
-        ->get();
+        $riskHistories = RiskHistory::where(
+            'country_id',
+            $riskScore->country_id
+        )
+            ->orderBy('calculated_at')
+            ->get();
 
-    $chartLabels = $riskHistories
-        ->map(function ($history) {
-            return $history->calculated_at
-                ? $history->calculated_at->format('d M H:i:s')
-                : '-';
-        });
+        $chartLabels = $riskHistories
+            ->map(function ($history) {
+                return $history->calculated_at
+                    ? $history->calculated_at->format('d M H:i:s')
+                    : '-';
+            });
 
-    $chartScores = $riskHistories
-        ->pluck('total_score');
+        $chartScores = $riskHistories
+            ->pluck('total_score');
 
-    return view('risk.show', compact(
-        'riskScore',
-        'riskHistories',
-        'chartLabels',
-        'chartScores'
-    ));
-}
+        /*
+        |--------------------------------------------------------------------------
+        | Risk Recommendations
+        |--------------------------------------------------------------------------
+        */
+
+        $recommendations = $recommendationService
+            ->generate($riskScore);
+
+        return view('risk.show', compact(
+            'riskScore',
+            'riskHistories',
+            'chartLabels',
+            'chartScores',
+            'recommendations'
+        ));
+    }
 }

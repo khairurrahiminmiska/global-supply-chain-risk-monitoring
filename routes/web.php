@@ -9,7 +9,9 @@ use App\Http\Controllers\PortController;
 use App\Http\Controllers\PortDashboardController;
 use App\Http\Controllers\RiskScoreController;
 use App\Http\Controllers\RiskDashboardController;
-
+use App\Http\Controllers\RiskAlertController;
+use App\Http\Controllers\RiskMapController;
+use App\Http\Controllers\MonitoringLogController;
 
 
 Route::get('/', function () {
@@ -87,4 +89,22 @@ Route::get('/risk-analytics', [
     'index'
 ])->name('risk.analytics');
 
+Route::get('/risk-alerts', [RiskAlertController::class, 'index'])
+    ->name('risk-alerts.index');
+
+Route::patch('/risk-alerts/{riskAlert}/read', [RiskAlertController::class, 'markAsRead'])
+    ->name('risk-alerts.read');
+
+Route::patch('/risk-alerts/read-all', [RiskAlertController::class, 'markAllAsRead'])
+    ->name('risk-alerts.read-all');
+
+Route::get('/risk-map', [RiskMapController::class, 'index'])
+    ->name('risk.map');
+
+Route::get('/monitoring-activity', [
+    MonitoringLogController::class,
+    'index'
+])
+    ->middleware('auth')
+    ->name('monitoring.index');
 require __DIR__.'/auth.php';
