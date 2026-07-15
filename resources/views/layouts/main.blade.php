@@ -234,34 +234,20 @@
 
             {{-- WEATHER --}}
 
-            <a
-                href="#"
-                class="flex items-center gap-3 px-4 py-3.5 rounded-xl mb-1
-                       text-[#66736B]
-                       hover:bg-[#F4F8F5]
-                       hover:text-[#16803C]
-                       transition duration-200"
-            >
+            <a href="{{ route('weather.index') }}"
+   class="flex items-center gap-3 px-5 py-3 rounded-xl transition
+   {{ request()->routeIs('weather.*')
+        ? 'bg-emerald-50 text-emerald-700 font-semibold'
+        : 'text-slate-500 hover:bg-emerald-50 hover:text-emerald-700'
+   }}">
 
-                <svg
-                    class="w-5 h-5"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                >
-                    <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="1.8"
-                        d="M7 16a4 4 0 010-8 5 5 0 019.6 1.7A3.5 3.5 0 0117.5 16H7zm2 3v1m4-1v1m4-1v1"
-                    />
-                </svg>
+    <span>🌦️</span>
 
-                <span>
-                    Weather Monitor
-                </span>
+    <span>
+        Weather Monitor
+    </span>
 
-            </a>
+</a>
 
 
             {{-- RISK SCORE --}}

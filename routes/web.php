@@ -12,6 +12,8 @@ use App\Http\Controllers\RiskDashboardController;
 use App\Http\Controllers\RiskAlertController;
 use App\Http\Controllers\RiskMapController;
 use App\Http\Controllers\MonitoringLogController;
+use App\Http\Controllers\SystemHealthController;
+use App\Http\Controllers\WeatherMonitorController;
 
 
 Route::get('/', function () {
@@ -107,4 +109,21 @@ Route::get('/monitoring-activity', [
 ])
     ->middleware('auth')
     ->name('monitoring.index');
+
+Route::get('/system-health', [
+    SystemHealthController::class,
+    'index'
+])->name('system.health');
+
+Route::get('/weather-monitor', [
+    WeatherMonitorController::class,
+    'index'
+])->middleware('auth')
+  ->name('weather.index');
+
+Route::post('/weather-monitor/sync', [
+    WeatherMonitorController::class,
+    'sync'
+])->middleware('auth')
+  ->name('weather.sync');
 require __DIR__.'/auth.php';

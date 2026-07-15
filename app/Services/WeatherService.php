@@ -12,12 +12,10 @@ class WeatherService
     public function sync(Country $country): bool
     {
         try {
-
             /*
             |--------------------------------------------------------------------------
             | Coordinate Override
             |--------------------------------------------------------------------------
-            | Digunakan jika nama ibu kota sulit ditemukan oleh Geocoding API.
             */
 
             $coordinateOverrides = [
@@ -34,18 +32,9 @@ class WeatherService
             */
 
             if (isset($coordinateOverrides[$country->code])) {
-
                 $latitude = $coordinateOverrides[$country->code]['latitude'];
                 $longitude = $coordinateOverrides[$country->code]['longitude'];
-
             } else {
-
-                /*
-                |--------------------------------------------------------------------------
-                | Cari koordinat berdasarkan ibu kota
-                |--------------------------------------------------------------------------
-                */
-
                 $locationName = $country->capital ?: $country->name;
 
                 $locationResponse = Http::timeout(20)
@@ -61,7 +50,6 @@ class WeatherService
                     );
 
                 if (!$locationResponse->successful()) {
-
                     Log::warning('Geocoding request failed', [
                         'country' => $country->name,
                     ]);
@@ -72,7 +60,6 @@ class WeatherService
                 $results = $locationResponse->json('results', []);
 
                 if (empty($results)) {
-
                     Log::warning('Geocoding location not found', [
                         'country' => $country->name,
                         'location' => $locationName,
@@ -81,25 +68,11 @@ class WeatherService
                     return false;
                 }
 
-                /*
-                |--------------------------------------------------------------------------
-                | Cari berdasarkan Country Code
-                |--------------------------------------------------------------------------
-                */
-
                 $location = collect($results)
                     ->first(function ($item) use ($country) {
-
                         return strtoupper($item['country_code'] ?? '')
                             === strtoupper($country->code);
-
                     });
-
-                /*
-                |--------------------------------------------------------------------------
-                | Fallback hasil pertama
-                |--------------------------------------------------------------------------
-                */
 
                 if (!$location) {
                     $location = $results[0];
@@ -109,7 +82,6 @@ class WeatherService
                 $longitude = $location['longitude'] ?? null;
 
                 if ($latitude === null || $longitude === null) {
-
                     Log::warning('Invalid geocoding coordinates', [
                         'country' => $country->name,
                     ]);
@@ -130,7 +102,6 @@ class WeatherService
                     'https://api.open-meteo.com/v1/forecast',
                     [
                         'latitude' => $latitude,
-
                         'longitude' => $longitude,
 
                         'current' => implode(',', [
@@ -145,7 +116,6 @@ class WeatherService
                 );
 
             if (!$weatherResponse->successful()) {
-
                 Log::warning('Weather API request failed', [
                     'country' => $country->name,
                 ]);
@@ -156,13 +126,24 @@ class WeatherService
             $current = $weatherResponse->json('current');
 
             if (!$current) {
-
                 Log::warning('Current weather data unavailable', [
                     'country' => $country->name,
                 ]);
 
                 return false;
             }
+
+            /*
+            |--------------------------------------------------------------------------
+            | Analisis Storm Risk
+            |--------------------------------------------------------------------------
+            */
+
+            $weatherCode = (int) ($current['weather_code'] ?? 0);
+
+            $stormRisk = $this->determineStormRisk(
+                $weatherCode
+            );
 
             /*
             |--------------------------------------------------------------------------
@@ -176,21 +157,16 @@ class WeatherService
                 ],
                 [
                     'temperature' => $current['temperature_2m'] ?? 0,
-
                     'rain' => $current['rain'] ?? 0,
-
                     'wind_speed' => $current['wind_speed_10m'] ?? 0,
-
-                    'weather_code' => $current['weather_code'] ?? 0,
-
+                    'weather_code' => $weatherCode,
+                    'storm_risk' => $stormRisk,
                     'retrieved_at' => now(),
                 ]
             );
 
             return true;
-
         } catch (\Throwable $e) {
-
             Log::error('Weather sync failed', [
                 'country' => $country->name,
                 'message' => $e->getMessage(),
@@ -198,6 +174,33 @@ class WeatherService
 
             return false;
         }
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Determine Storm Risk
+    |--------------------------------------------------------------------------
+    */
+
+    private function determineStormRisk(int $weatherCode): string
+    {
+        return match (true) {
+            in_array($weatherCode, [96, 99], true)
+                => 'CRITICAL',
+
+            $weatherCode === 95
+                => 'HIGH',
+
+            in_array($weatherCode, [
+                65,
+                67,
+                82,
+            ], true)
+                => 'MEDIUM',
+
+            default
+                => 'LOW',
+        };
     }
 
     /*
@@ -216,17 +219,11 @@ class WeatherService
             ->chunkById(
                 50,
                 function ($countries) use (&$success, &$failed) {
-
                     foreach ($countries as $country) {
-
                         if ($this->sync($country)) {
-
                             $success++;
-
                         } else {
-
                             $failed++;
-
                         }
                     }
                 }
