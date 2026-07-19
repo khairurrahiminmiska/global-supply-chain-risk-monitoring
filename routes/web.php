@@ -14,6 +14,9 @@ use App\Http\Controllers\RiskMapController;
 use App\Http\Controllers\MonitoringLogController;
 use App\Http\Controllers\SystemHealthController;
 use App\Http\Controllers\WeatherMonitorController;
+use App\Http\Controllers\NewsIntelligenceController;
+use App\Http\Controllers\ComparisonController;
+use App\Http\Controllers\BusinessDashboardController;
 
 
 Route::get('/', function () {
@@ -126,4 +129,29 @@ Route::post('/weather-monitor/sync', [
     'sync'
 ])->middleware('auth')
   ->name('weather.sync');
+
+Route::get('/news-intelligence', [
+    NewsIntelligenceController::class,
+    'index'
+])->middleware('auth')
+  ->name('news.index');
+
+Route::get('/comparison', [
+    ComparisonController::class,
+    'index'
+])->middleware('auth')
+  ->name('comparison.index');
+
+Route::post('/comparison', [
+    ComparisonController::class,
+    'compare'
+])->middleware('auth')
+  ->name('comparison.compare');
+
+Route::get('/business-dashboard', [
+    BusinessDashboardController::class,
+    'index'
+])->middleware('auth')
+  ->name('business.index');
+
 require __DIR__.'/auth.php';

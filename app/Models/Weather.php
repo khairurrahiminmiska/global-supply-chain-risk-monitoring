@@ -8,6 +8,8 @@ class Weather extends Model
 {
     protected $fillable = [
         'country_id',
+        'latitude',
+        'longitude',
         'temperature',
         'rain',
         'wind_speed',
@@ -17,6 +19,8 @@ class Weather extends Model
     ];
 
     protected $casts = [
+        'latitude' => 'float',
+        'longitude' => 'float',
         'temperature' => 'float',
         'rain' => 'float',
         'wind_speed' => 'float',

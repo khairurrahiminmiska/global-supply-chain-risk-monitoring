@@ -14,6 +14,8 @@ class Country extends Model
         'currency',
         'population',
         'flag',
+        'latitude',
+        'longitude',
         'gdp',
 
 'inflation',

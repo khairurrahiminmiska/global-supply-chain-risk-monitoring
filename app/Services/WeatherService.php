@@ -147,6 +147,17 @@ class WeatherService
 
             /*
             |--------------------------------------------------------------------------
+            | Simpan Koordinat ke Country
+            |--------------------------------------------------------------------------
+            */
+
+            $country->update([
+                'latitude' => $latitude,
+                'longitude' => $longitude,
+            ]);
+
+            /*
+            |--------------------------------------------------------------------------
             | Simpan Weather ke Database
             |--------------------------------------------------------------------------
             */
@@ -156,6 +167,8 @@ class WeatherService
                     'country_id' => $country->id,
                 ],
                 [
+                    'latitude' => $latitude,
+                    'longitude' => $longitude,
                     'temperature' => $current['temperature_2m'] ?? 0,
                     'rain' => $current['rain'] ?? 0,
                     'wind_speed' => $current['wind_speed_10m'] ?? 0,

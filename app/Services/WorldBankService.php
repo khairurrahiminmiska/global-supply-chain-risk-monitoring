@@ -4,21 +4,13 @@ namespace App\Services;
 
 use App\Models\Country;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class WorldBankService
 {
     public function sync(Country $country)
     {
-        // Mapping kode negara ke World Bank (pakai ISO2)
         $countryCode = strtolower($country->code);
-
-        /*
-        GDP
-        NY.GDP.MKTP.CD
-
-        Inflation
-        FP.CPI.TOTL.ZG
-        */
 
         $gdp = $this->getIndicator(
             $countryCode,
@@ -30,12 +22,27 @@ class WorldBankService
             'FP.CPI.TOTL.ZG'
         );
 
+        $exports = $this->getIndicator(
+            $countryCode,
+            'NE.EXP.GNFS.CD'
+        );
+
+        $imports = $this->getIndicator(
+            $countryCode,
+            'NE.IMP.GNFS.CD'
+        );
+
+        $population = $this->getIndicator(
+            $countryCode,
+            'SP.POP.TOTL'
+        );
+
         $country->update([
-
             'gdp' => $gdp,
-
             'inflation' => $inflation,
-
+            'exports' => $exports,
+            'imports' => $imports,
+            'population' => $population,
         ]);
 
         return true;
@@ -43,31 +50,47 @@ class WorldBankService
 
     private function getIndicator($countryCode, $indicator)
     {
-        $url =
-            "https://api.worldbank.org/v2/country/{$countryCode}/indicator/{$indicator}?format=json";
+        try {
 
-        $response = Http::timeout(30)->get($url);
+            $url =
+                "https://api.worldbank.org/v2/country/{$countryCode}/indicator/{$indicator}?format=json";
 
-        if (!$response->successful()) {
-            return null;
-        }
+            $response = Http::timeout(15)
+                ->retry(3, 1000)
+                ->get($url);
 
-        $json = $response->json();
+            if (! $response->successful()) {
+                return null;
+            }
 
-        if (!isset($json[1])) {
-            return null;
-        }
+            $json = $response->json();
 
-        foreach ($json[1] as $item) {
+            if (! isset($json[1])) {
+                return null;
+            }
 
-            if (!empty($item['value'])) {
+            foreach ($json[1] as $item) {
 
-                return $item['value'];
+                if (! empty($item['value'])) {
+
+                    return $item['value'];
+
+                }
 
             }
 
-        }
+            return null;
 
-        return null;
+        } catch (\Throwable $e) {
+
+            Log::warning('WorldBank indicator failed', [
+                'country' => $countryCode,
+                'indicator' => $indicator,
+                'error' => $e->getMessage(),
+            ]);
+
+            return null;
+
+        }
     }
 }

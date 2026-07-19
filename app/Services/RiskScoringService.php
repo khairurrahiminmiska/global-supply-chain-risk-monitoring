@@ -5,9 +5,14 @@ namespace App\Services;
 use App\Models\Country;
 use App\Models\RiskScore;
 use App\Models\RiskHistory;
+use App\Services\RiskAlertService;
 
 class RiskScoringService
 {
+    public function __construct(
+        private RiskAlertService $riskAlertService
+    ) {
+    }
     public function calculateAll(): void
     {
         Country::query()
@@ -88,6 +93,8 @@ RiskHistory::create([
     'calculated_at' => now(),
 ]);
 
+$this->riskAlertService->generate($riskScore);
+
 return $riskScore;
     }
 
@@ -98,47 +105,103 @@ return $riskScore;
     */
 
     private function calculateWeatherScore(Country $country): int
-    {
-        $weather = $country->weather()
-            ->latest('retrieved_at')
-            ->first();
+{
+    $weather = $country->weather()
+        ->latest('retrieved_at')
+        ->first();
 
-        if (!$weather) {
-            return 50;
-        }
-
-        $score = 0;
-
-        $rain = (float) $weather->rain;
-
-        $wind = (float) $weather->wind_speed;
-
-        /*
-        | Rain Risk
-        */
-
-        $score += match (true) {
-            $rain >= 20 => 50,
-            $rain >= 10 => 40,
-            $rain >= 5 => 30,
-            $rain > 0 => 15,
-            default => 0,
-        };
-
-        /*
-        | Wind Risk
-        */
-
-        $score += match (true) {
-            $wind >= 80 => 50,
-            $wind >= 60 => 40,
-            $wind >= 40 => 30,
-            $wind >= 20 => 15,
-            default => 0,
-        };
-
-        return min($score, 100);
+    if (!$weather) {
+        return 50;
     }
+
+    $score = 0;
+
+    /*
+    |--------------------------------------------------------------------------
+    | TEMPERATURE
+    |--------------------------------------------------------------------------
+    */
+
+    $temperature = (float) $weather->temperature;
+
+    $score += match (true) {
+
+        $temperature >= 40 => 25,
+
+        $temperature >= 35 => 20,
+
+        $temperature <= -5 => 20,
+
+        $temperature <= 5 => 10,
+
+        default => 0,
+
+    };
+
+    /*
+    |--------------------------------------------------------------------------
+    | RAIN
+    |--------------------------------------------------------------------------
+    */
+
+    $rain = (float) $weather->rain;
+
+    $score += match (true) {
+
+        $rain >= 20 => 25,
+
+        $rain >= 10 => 20,
+
+        $rain >= 5 => 15,
+
+        $rain > 0 => 10,
+
+        default => 0,
+
+    };
+
+    /*
+    |--------------------------------------------------------------------------
+    | WIND
+    |--------------------------------------------------------------------------
+    */
+
+    $wind = (float) $weather->wind_speed;
+
+    $score += match (true) {
+
+        $wind >= 80 => 25,
+
+        $wind >= 60 => 20,
+
+        $wind >= 40 => 15,
+
+        $wind >= 20 => 10,
+
+        default => 0,
+
+    };
+
+    /*
+    |--------------------------------------------------------------------------
+    | STORM RISK
+    |--------------------------------------------------------------------------
+    */
+
+    $score += match ($weather->storm_risk) {
+
+        'CRITICAL' => 25,
+
+        'HIGH' => 20,
+
+        'MEDIUM' => 10,
+
+        default => 0,
+
+    };
+
+    return min($score,100);
+}
 
     /*
     |--------------------------------------------------------------------------

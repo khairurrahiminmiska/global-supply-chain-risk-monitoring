@@ -189,6 +189,20 @@
 
             </a>
 
+            <a href="{{ route('business.index') }}"
+   class="flex items-center gap-3 px-5 py-3 rounded-xl transition
+   {{ request()->routeIs('business.*')
+        ? 'bg-emerald-50 text-emerald-700 font-semibold'
+        : 'text-slate-500 hover:bg-emerald-50 hover:text-emerald-700'
+   }}">
+
+    <span>📊</span>
+
+    <span>
+        Business Intelligence
+    </span>
+
+</a>
 
             {{-- INTELLIGENCE --}}
 
@@ -198,39 +212,50 @@
             >
                 INTELLIGENCE
             </p>
+            
+            <a href="{{ route('comparison.index') }}"
+   class="flex items-center gap-3 px-5 py-3 rounded-xl transition
+   {{ request()->routeIs('comparison.*')
+        ? 'bg-emerald-50 text-emerald-700 font-semibold'
+        : 'text-slate-500 hover:bg-emerald-50 hover:text-emerald-700'
+   }}">
 
+    <span>⚖️</span>
+
+    <span>Country Comparison</span>
+
+</a>
 
             {{-- NEWS --}}
 
-            <a
-                href="#"
-                class="flex items-center gap-3 px-4 py-3.5 rounded-xl mb-1
-                       text-[#66736B]
-                       hover:bg-[#F4F8F5]
-                       hover:text-[#16803C]
-                       transition duration-200"
-            >
+<a
+    href="{{ route('news.index') }}"
+    class="flex items-center gap-3 px-5 py-3 rounded-xl transition
+    {{ request()->routeIs('news.*')
+        ? 'bg-emerald-50 text-emerald-700 font-semibold'
+        : 'text-slate-500 hover:bg-emerald-50 hover:text-emerald-700'
+    }}"
+>
 
-                <svg
-                    class="w-5 h-5"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                >
-                    <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="1.8"
-                        d="M5 4h11a2 2 0 012 2v13H7a2 2 0 01-2-2V4zm13 4h1a2 2 0 012 2v7a2 2 0 01-2 2h-1M8 8h7M8 12h7M8 16h4"
-                    />
-                </svg>
+    <svg
+        class="w-5 h-5"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+    >
+        <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="1.8"
+            d="M5 4h11a2 2 0 012 2v13H7a2 2 0 01-2-2V4zm13 4h1a2 2 0 012 2v7a2 2 0 01-2 2h-1M8 8h7M8 12h7M8 16h4"
+        />
+    </svg>
 
-                <span>
-                    News Intelligence
-                </span>
+    <span>
+        News Intelligence
+    </span>
 
-            </a>
-
+</a>
 
             {{-- WEATHER --}}
 

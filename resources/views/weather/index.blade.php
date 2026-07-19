@@ -341,6 +341,238 @@
 
     </form>
 
+    {{-- WEATHER MAP --}}
+    @if($mapWeather->isNotEmpty())
+        <link
+            rel="stylesheet"
+            href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        />
+
+        <style>
+            #weatherMap {
+                height: 480px;
+                width: 100%;
+                z-index: 1;
+                border-radius: 0 0 24px 24px;
+            }
+
+            .weather-marker {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                width: 32px;
+                height: 32px;
+                border-radius: 50%;
+                color: white;
+                font-size: 14px;
+                font-weight: 800;
+                border: 3px solid rgba(255, 255, 255, 0.95);
+                box-shadow: 0 4px 16px rgba(15, 23, 42, 0.18);
+                transition: 0.2s ease;
+            }
+
+            .weather-marker:hover {
+                transform: scale(1.15);
+            }
+
+            .marker-rain { background: #3b82f6; }
+            .marker-storm { background: #8b5cf6; }
+            .marker-wind { background: #f97316; }
+            .marker-snow { background: #06b6d4; }
+            .marker-fog { background: #eab308; }
+            .marker-clear { background: #22c55e; }
+            .marker-cloudy { background: #6b7280; }
+            .marker-drizzle { background: #0ea5e9; }
+            .marker-unknown { background: #9ca3af; }
+
+            .weather-popup-content {
+                font-family: system-ui, sans-serif;
+            }
+
+            .weather-popup-content .popup-header {
+                padding: 16px;
+                border-bottom: 1px solid #f1f5f9;
+            }
+
+            .weather-popup-content .popup-body {
+                padding: 16px;
+            }
+
+            .weather-popup-content .metric {
+                display: flex;
+                justify-content: space-between;
+                padding: 6px 0;
+                font-size: 13px;
+            }
+
+            .weather-popup-content .metric-label {
+                color: #64748b;
+            }
+
+            .weather-popup-content .metric-value {
+                font-weight: 700;
+                color: #0f172a;
+            }
+        </style>
+
+        <div class="bg-white border border-slate-200 rounded-3xl shadow-sm overflow-hidden">
+            <div class="p-6 border-b border-slate-100 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                <div>
+                    <h2 class="text-xl font-bold text-slate-900">
+                        Weather Conditions Map
+                    </h2>
+                    <p class="text-sm text-slate-500 mt-1">
+                        Geographical distribution of weather conditions across monitored countries.
+                    </p>
+                </div>
+                <div class="flex flex-wrap gap-4 text-sm">
+                    <div class="flex items-center gap-2">
+                        <span class="w-3 h-3 rounded-full bg-[#22c55e]"></span>
+                        Clear
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="w-3 h-3 rounded-full bg-[#0ea5e9]"></span>
+                        Rain
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="w-3 h-3 rounded-full bg-[#8b5cf6]"></span>
+                        Storm
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="w-3 h-3 rounded-full bg-[#f97316]"></span>
+                        Wind
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="w-3 h-3 rounded-full bg-[#6b7280]"></span>
+                        Cloudy
+                    </div>
+                </div>
+            </div>
+            <div id="weatherMap"></div>
+        </div>
+
+        <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+        <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const mapWeather = @json($mapWeather);
+
+            const map = L.map('weatherMap', {
+                zoomControl: true,
+                minZoom: 2,
+                worldCopyJump: true
+            }).setView([15, 15], 2);
+
+            L.tileLayer(
+                'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+                {
+                    maxZoom: 18,
+                    attribution: '&copy; OpenStreetMap contributors'
+                }
+            ).addTo(map);
+
+            function markerClass(condition) {
+                const map = {
+                    'Rain': 'marker-rain',
+                    'Rain Shower': 'marker-rain',
+                    'Thunderstorm': 'marker-storm',
+                    'Snow': 'marker-snow',
+                    'Snow Shower': 'marker-snow',
+                    'Fog': 'marker-fog',
+                    'Clear Sky': 'marker-clear',
+                    'Cloudy': 'marker-cloudy',
+                    'Drizzle': 'marker-drizzle',
+                };
+                return map[condition] || 'marker-unknown';
+            }
+
+            function markerIcon(condition) {
+                const icons = {
+                    'Rain': '🌧',
+                    'Rain Shower': '🌧',
+                    'Thunderstorm': '⛈',
+                    'Snow': '❄',
+                    'Snow Shower': '🌨',
+                    'Fog': '🌫',
+                    'Clear Sky': '☀',
+                    'Cloudy': '☁',
+                    'Drizzle': '🌦',
+                };
+                return icons[condition] || '🌤';
+            }
+
+            const markerLayer = L.layerGroup().addTo(map);
+
+            mapWeather.forEach(function (w) {
+                let condition = w.condition_label;
+                let markerClass_name = markerClass(condition);
+                let icon = markerIcon(condition);
+
+                if (markerClass_name === 'marker-unknown' && w.wind_speed >= 40) {
+                    markerClass_name = 'marker-wind';
+                    icon = '💨';
+                } else if (condition === 'Thunderstorm') {
+                    markerClass_name = 'marker-storm';
+                    icon = '⛈';
+                }
+
+                const markerIcon_div = L.divIcon({
+                    className: '',
+                    html: `<div class="weather-marker ${markerClass_name}">${icon}</div>`,
+                    iconSize: [32, 32],
+                    iconAnchor: [16, 16],
+                    popupAnchor: [0, -18]
+                });
+
+                const popupContent = `
+                    <div class="weather-popup-content">
+                        <div class="popup-header">
+                            <div style="font-size:16px;font-weight:800;color:#0f172a;">
+                                ${w.country?.name ?? 'Unknown'}
+                            </div>
+                            <div style="font-size:12px;color:#94a3b8;margin-top:2px;">
+                                ${w.country?.capital ?? '-'} · ${w.country?.code ?? '-'}
+                            </div>
+                        </div>
+                        <div class="popup-body">
+                            <div class="metric">
+                                <span class="metric-label">Condition</span>
+                                <span class="metric-value">${condition}</span>
+                            </div>
+                            <div class="metric">
+                                <span class="metric-label">Temperature</span>
+                                <span class="metric-value">${w.temperature?.toFixed(1) ?? '-'}°C</span>
+                            </div>
+                            <div class="metric">
+                                <span class="metric-label">Rain</span>
+                                <span class="metric-value">${w.rain?.toFixed(1) ?? '0'} mm</span>
+                            </div>
+                            <div class="metric">
+                                <span class="metric-label">Wind Speed</span>
+                                <span class="metric-value">${w.wind_speed?.toFixed(1) ?? '0'} km/h</span>
+                            </div>
+                            <div class="metric" style="border-top:1px solid #f1f5f9;padding-top:8px;margin-top:4px;">
+                                <span class="metric-label">Storm Risk</span>
+                                <span class="metric-value" style="color:${
+                                    w.storm_risk === 'CRITICAL' ? '#dc2626' :
+                                    w.storm_risk === 'HIGH' ? '#ea580c' :
+                                    w.storm_risk === 'MEDIUM' ? '#d97706' : '#16a34a'
+                                }">${w.storm_risk ?? 'LOW'}</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                const marker = L.marker([w.latitude, w.longitude], {
+                    icon: markerIcon_div
+                });
+                marker.bindPopup(popupContent, { maxWidth: 280 });
+                marker.addTo(markerLayer);
+            });
+        });
+        </script>
+    @endif
+
     {{-- WEATHER CARDS --}}
     <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
 

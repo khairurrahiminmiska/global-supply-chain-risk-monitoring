@@ -107,7 +107,7 @@
 
                 @else
 
-                    Coming Soon
+                    -
 
                 @endif
 
@@ -133,7 +133,7 @@
 
                 @else
 
-                    Coming Soon
+                    -
 
                 @endif
 
@@ -171,7 +171,7 @@
 
                 <li>
 
-                    Export & Import akan ditambahkan pada tahap berikutnya.
+                    Export & Import dalam USD dari World Bank API.
 
                 </li>
 
@@ -204,16 +204,16 @@
                 </span>
 
                 <span
-                    class="inline-block bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full">
+                    class="inline-block {{ $country->exports ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500' }} px-3 py-1 rounded-full">
 
-                    Export Coming Soon
+                    {{ $country->exports ? '✔ Export' : '— Export' }}
 
                 </span>
 
                 <span
-                    class="inline-block bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full">
+                    class="inline-block {{ $country->imports ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500' }} px-3 py-1 rounded-full">
 
-                    Import Coming Soon
+                    {{ $country->imports ? '✔ Import' : '— Import' }}
 
                 </span>
 

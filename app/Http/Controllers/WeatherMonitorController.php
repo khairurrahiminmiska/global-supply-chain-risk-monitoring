@@ -110,6 +110,21 @@ class WeatherMonitorController extends Controller
                 return $weather;
             });
 
+        $mapWeather = $allWeather
+            ->filter(fn ($w) => $w->latitude && $w->longitude)
+            ->map(function ($weather) {
+                $weather->monitoring_level =
+                    $this->getRiskLevel($weather);
+
+                $weather->condition_label =
+                    $this->getWeatherCondition(
+                        $weather->weather_code
+                    );
+
+                return $weather;
+            })
+            ->values();
+
         return view('weather.index', compact(
             'weatherRecords',
             'totalCountries',
@@ -117,7 +132,8 @@ class WeatherMonitorController extends Controller
             'criticalWeather',
             'warningWeather',
             'averageTemperature',
-            'stormRiskSummary'
+            'stormRiskSummary',
+            'mapWeather'
         ));
     }
 

@@ -21,6 +21,7 @@ class CountryController extends Controller
     public function __construct(CountryService $countryService)
     {
         $this->countryService = $countryService;
+        set_time_limit(0);
     }
 
     /**
