@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Country;
 use App\Services\CountryService;
+use App\Services\CountryImportService;
 use Illuminate\Http\Request;
 use App\Services\ExchangeRateService;
 use App\Services\NewsService;
@@ -49,13 +50,31 @@ class CountryController extends Controller
     /**
      * Sinkronisasi data negara
      */
-    public function sync()
+    public function sync(Request $request)
     {
         $this->countryService->syncCountries();
+
+        if ($request->ajax()) {
+            return response()->json(['success' => true, 'message' => 'Data negara berhasil diperbarui.']);
+        }
 
         return redirect()
             ->route('countries.index')
             ->with('success', 'Data negara berhasil diperbarui.');
+    }
+
+    public function import(Request $request, CountryImportService $service)
+    {
+        $request->validate([
+            'csv' => 'required|file|mimes:csv,txt'
+        ]);
+
+        $path = $request->file('csv')->getRealPath();
+        $imported = $service->import($path);
+
+        return redirect()
+            ->route('countries.index')
+            ->with('success', "{$imported} negara berhasil diimport.");
     }
 
     /**
@@ -76,6 +95,10 @@ class CountryController extends Controller
 
     $risk = $country->riskScore;
 
+    $watchlist = auth()->user()->watchlists()
+        ->where('country_id', $country->id)
+        ->first();
+
     return view(
         'countries.show',
         compact(
@@ -83,15 +106,20 @@ class CountryController extends Controller
             'exchangeRate',
             'news',
             'weather',
-            'risk'
+            'risk',
+            'watchlist'
         )
     );
 }
 
 
-    public function syncExchangeRate(Country $country, ExchangeRateService $service)
+    public function syncExchangeRate(Request $request, Country $country, ExchangeRateService $service)
 {
     $service->sync($country);
+
+    if ($request->ajax()) {
+        return response()->json(['success' => true, 'message' => 'Exchange Rate berhasil diperbarui.']);
+    }
 
     return redirect()
         ->route('countries.show', $country)
@@ -108,17 +136,26 @@ public function syncNews(
 
     $service->sync($country, $category);
 
+    if ($request->ajax()) {
+        return response()->json(['success' => true, 'message' => 'News berhasil diperbarui.']);
+    }
+
     return redirect()
         ->route('countries.show', $country)
         ->with('success', 'News berhasil diperbarui.');
 }
 
         public function syncWeather(
+    Request $request,
     Country $country,
     WeatherService $service
 )
 {
     $service->sync($country);
+
+    if ($request->ajax()) {
+        return response()->json(['success' => true, 'message' => 'Weather berhasil diperbarui.']);
+    }
 
     return redirect()
         ->route('countries.show',$country)
@@ -126,11 +163,16 @@ public function syncNews(
 }
     
     public function syncEconomy(
+    Request $request,
     Country $country,
     WorldBankService $service
 )
 {
     $service->sync($country);
+
+    if ($request->ajax()) {
+        return response()->json(['success' => true, 'message' => 'Data ekonomi berhasil diperbarui.']);
+    }
 
     return back()->with(
         'success',
@@ -139,11 +181,16 @@ public function syncNews(
 }
      
     public function calculateRisk(
+    Request $request,
     Country $country,
     RiskScoringService $service
 )
 {
     $service->calculate($country);
+
+    if ($request->ajax()) {
+        return response()->json(['success' => true, 'message' => 'Risk Score berhasil dihitung.']);
+    }
 
     return redirect()
         ->route('countries.show',$country)

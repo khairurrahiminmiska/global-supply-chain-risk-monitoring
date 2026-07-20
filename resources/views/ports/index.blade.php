@@ -2,6 +2,8 @@
 
 @section('content')
 
+@include('partials.nav.infrastructure')
+
 {{-- LEAFLET CSS --}}
 <link
     rel="stylesheet"
@@ -15,7 +17,7 @@
 
         <div>
             <h1 class="text-3xl font-bold text-slate-800">
-                🚢 Global Ports
+                Global Ports
             </h1>
 
             <p class="text-gray-500 mt-2">
@@ -164,6 +166,41 @@
 
 </div>
 
+
+{{-- PORT IMPORT --}}
+<div class="bg-white rounded-2xl shadow-lg p-6 mb-8">
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        <div>
+            <h2 class="text-xl font-bold text-slate-800">
+                📥 Import Ports from CSV
+            </h2>
+            <p class="text-gray-500 text-sm mt-1">
+                Upload a CSV file with port data to bulk import into the system.
+            </p>
+        </div>
+        <form
+            method="POST"
+            action="{{ route('ports.import') }}"
+            enctype="multipart/form-data"
+            class="flex flex-col sm:flex-row gap-3 items-start sm:items-center"
+        >
+            @csrf
+            <input
+                type="file"
+                name="csv"
+                accept=".csv"
+                required
+                class="border border-slate-300 rounded-lg px-4 py-2.5 text-sm file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:bg-blue-50 file:text-blue-700 file:font-semibold hover:file:bg-blue-100"
+            >
+            <button
+                type="submit"
+                class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-5 py-2.5 rounded-lg text-sm transition"
+            >
+                Upload & Import
+            </button>
+        </form>
+    </div>
+</div>
 
 {{-- PORT DATABASE --}}
 <div class="bg-white rounded-2xl shadow-lg overflow-hidden">

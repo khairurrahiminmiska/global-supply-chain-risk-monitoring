@@ -6,7 +6,7 @@
         <div>
 
             <h2 class="text-2xl font-bold">
-                🌦 Weather Monitoring
+                Weather Monitoring
             </h2>
 
             <p class="text-gray-500 text-sm">
@@ -15,14 +15,14 @@
 
         </div>
 
-        <form action="{{ route('countries.weather.sync',$country) }}" method="POST">
+        <form action="{{ route('countries.weather.sync',$country) }}" method="POST" data-ajax="true">
 
             @csrf
 
             <button
                 class="bg-cyan-600 hover:bg-cyan-700 text-white px-5 py-2 rounded-lg transition">
 
-                🌦 Update Weather
+                Update Weather
 
             </button>
 

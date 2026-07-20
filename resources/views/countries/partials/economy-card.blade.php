@@ -6,7 +6,7 @@
 
             <h2 class="text-2xl font-bold">
 
-                🌍 Economy
+                Economy
 
             </h2>
 
@@ -20,14 +20,15 @@
 
         <form
             action="{{ route('countries.economy',$country) }}"
-            method="POST">
+            method="POST"
+            data-ajax="true">
 
             @csrf
 
             <button
                 class="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2 rounded-lg">
 
-                🔄 Update Economy
+                Update Economy
 
             </button>
 
@@ -43,7 +44,7 @@
 
             <p class="text-sm text-gray-500">
 
-                💰 GDP
+                GDP
 
             </p>
 
@@ -51,7 +52,14 @@
 
                 @if($country->gdp)
 
-                    ${{ number_format($country->gdp,0,'.',',') }}
+                    @php
+                        $g = $country->gdp;
+                        if ($g >= 1e12) $fmt = '$'.number_format($g/1e12,2).'T';
+                        elseif ($g >= 1e9) $fmt = '$'.number_format($g/1e9,2).'B';
+                        elseif ($g >= 1e6) $fmt = '$'.number_format($g/1e6,2).'M';
+                        else $fmt = '$'.number_format($g,0);
+                    @endphp
+                    <span class="break-all">{{ $fmt }}</span>
 
                 @else
 
@@ -69,7 +77,7 @@
 
             <p class="text-sm text-gray-500">
 
-                📉 Inflation
+                Inflation
 
             </p>
 
@@ -95,7 +103,7 @@
 
             <p class="text-sm text-gray-500">
 
-                📦 Export
+                Export
 
             </p>
 
@@ -103,7 +111,14 @@
 
                 @if($country->exports)
 
-                    ${{ number_format($country->exports,0,'.',',') }}
+                    @php
+                        $e = $country->exports;
+                        if ($e >= 1e12) $fmt = '$'.number_format($e/1e12,2).'T';
+                        elseif ($e >= 1e9) $fmt = '$'.number_format($e/1e9,2).'B';
+                        elseif ($e >= 1e6) $fmt = '$'.number_format($e/1e6,2).'M';
+                        else $fmt = '$'.number_format($e,0);
+                    @endphp
+                    <span class="break-all">{{ $fmt }}</span>
 
                 @else
 
@@ -121,7 +136,7 @@
 
             <p class="text-sm text-gray-500">
 
-                📥 Import
+                Import
 
             </p>
 
@@ -129,7 +144,14 @@
 
                 @if($country->imports)
 
-                    ${{ number_format($country->imports,0,'.',',') }}
+                    @php
+                        $i = $country->imports;
+                        if ($i >= 1e12) $fmt = '$'.number_format($i/1e12,2).'T';
+                        elseif ($i >= 1e9) $fmt = '$'.number_format($i/1e9,2).'B';
+                        elseif ($i >= 1e6) $fmt = '$'.number_format($i/1e6,2).'M';
+                        else $fmt = '$'.number_format($i,0);
+                    @endphp
+                    <span class="break-all">{{ $fmt }}</span>
 
                 @else
 
@@ -151,7 +173,7 @@
 
             <h3 class="font-bold mb-2">
 
-                📊 Economic Summary
+                Economic Summary
 
             </h3>
 
@@ -183,7 +205,7 @@
 
             <h3 class="font-bold mb-2">
 
-                📌 Status
+                Status
 
             </h3>
 

@@ -17,8 +17,6 @@ class PortImportService
 
         $header = fgetcsv($handle);
 
-        dd($header);
-
         while (($row = fgetcsv($handle)) !== false) {
 
             $data = array_combine($header, $row);

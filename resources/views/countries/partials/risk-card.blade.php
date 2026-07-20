@@ -6,7 +6,7 @@
 
             <h2 class="text-2xl font-bold">
 
-                📈 Risk Score
+                Risk Score
 
             </h2>
 
@@ -20,14 +20,15 @@
 
         <form
             action="{{ route('countries.risk.calculate',$country) }}"
-            method="POST">
+            method="POST"
+            data-ajax="true">
 
             @csrf
 
             <button
                 class="bg-red-600 hover:bg-red-700 text-white px-5 py-2 rounded-lg">
 
-                📈 Calculate Risk
+                Calculate Risk
 
             </button>
 
@@ -118,7 +119,7 @@
                 <span
                     class="bg-green-100 text-green-700 px-5 py-2 rounded-full">
 
-                    🟢 LOW
+                    LOW
 
                 </span>
 
@@ -127,7 +128,7 @@
                 <span
                     class="bg-yellow-100 text-yellow-700 px-5 py-2 rounded-full">
 
-                    🟡 MEDIUM
+                    MEDIUM
 
                 </span>
 
@@ -136,7 +137,7 @@
                 <span
                     class="bg-red-100 text-red-700 px-5 py-2 rounded-full">
 
-                    🔴 HIGH
+                    HIGH
 
                 </span>
 
@@ -148,11 +149,7 @@
 
         <div class="text-center py-10">
 
-            <div class="text-6xl">
-
-                📈
-
-            </div>
+            <div class="text-5xl font-bold text-slate-300">%</div>
 
             <h2 class="text-xl font-bold mt-5">
 

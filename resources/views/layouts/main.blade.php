@@ -11,6 +11,13 @@
 
     <title>GSCRM — Global Risk Intelligence</title>
 
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+
     @vite([
         'resources/css/app.css',
         'resources/js/app.js'
@@ -73,292 +80,51 @@
 
         {{-- NAVIGATION --}}
 
-        <nav class="flex-1 overflow-y-auto px-4 py-7">
+        <nav class="flex-1 overflow-y-auto px-4 py-7 space-y-1">
 
-            {{-- OVERVIEW --}}
-
-            <p
-                class="px-4 mb-3 text-[11px] font-bold
-                       tracking-[0.18em] text-[#9AA8A0]"
-            >
-                OVERVIEW
-            </p>
-
-
-            {{-- DASHBOARD --}}
-
-            <a
-                href="{{ route('dashboard') }}"
-                class="flex items-center gap-3 px-4 py-3.5 rounded-xl mb-1
-                transition duration-200
-                {{ request()->routeIs('dashboard')
+            <a href="{{ route('dashboard') }}"
+               class="flex items-center gap-3 px-4 py-3.5 rounded-xl transition duration-200
+               {{ request()->routeIs('dashboard')
                     ? 'bg-[#ECFDF3] text-[#16803C] font-semibold'
                     : 'text-[#66736B] hover:bg-[#F4F8F5] hover:text-[#16803C]'
-                }}"
-            >
-
-                <svg
-                    class="w-5 h-5"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                >
-                    <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="1.8"
-                        d="M4 5a1 1 0 011-1h5v6H4V5zm10-1h5a1 1 0 011 1v9h-6V4zM4 14h6v6H5a1 1 0 01-1-1v-5zm10 4h6v1a1 1 0 01-1 1h-5v-2z"
-                    />
-                </svg>
-
-                <span>
-                    Command Center
-                </span>
-
+               }}">
+                <span>Command Center</span>
             </a>
 
-
-            {{-- COUNTRIES --}}
-
-            <a
-                href="{{ route('countries.index') }}"
-                class="flex items-center gap-3 px-4 py-3.5 rounded-xl mb-1
-                transition duration-200
-                {{ request()->routeIs('countries.*')
+            <a href="{{ route('countries.index') }}"
+               class="flex items-center gap-3 px-4 py-3.5 rounded-xl transition duration-200
+               {{ request()->routeIs('countries.*') || request()->routeIs('comparison.*') || request()->routeIs('news.*') || request()->routeIs('watchlist.*')
                     ? 'bg-[#ECFDF3] text-[#16803C] font-semibold'
                     : 'text-[#66736B] hover:bg-[#F4F8F5] hover:text-[#16803C]'
-                }}"
-            >
-
-                <svg
-                    class="w-5 h-5"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                >
-                    <circle
-                        cx="12"
-                        cy="12"
-                        r="9"
-                        stroke-width="1.8"
-                    />
-
-                    <path
-                        stroke-linecap="round"
-                        stroke-width="1.8"
-                        d="M3 12h18M12 3c2.5 2.5 4 5.5 4 9s-1.5 6.5-4 9c-2.5-2.5-4-5.5-4-9s1.5-6.5 4-9z"
-                    />
-                </svg>
-
-                <span>
-                    Countries
-                </span>
-
+               }}">
+                <span>Country Intelligence</span>
             </a>
 
-
-            {{-- PORTS --}}
-
-            <a
-                href="{{ route('ports.index') }}"
-                class="flex items-center gap-3 px-4 py-3.5 rounded-xl mb-1
-                transition duration-200
-                {{ request()->routeIs('ports.*')
+            <a href="{{ route('risk.index') }}"
+               class="flex items-center gap-3 px-4 py-3.5 rounded-xl transition duration-200
+               {{ request()->routeIs('risk.*') || request()->routeIs('risk-alerts.*') || request()->routeIs('risk.analytics') || request()->routeIs('risk.map')
                     ? 'bg-[#ECFDF3] text-[#16803C] font-semibold'
                     : 'text-[#66736B] hover:bg-[#F4F8F5] hover:text-[#16803C]'
-                }}"
-            >
-
-                <svg
-                    class="w-5 h-5"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                >
-                    <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="1.8"
-                        d="M3 17l2 2h14l2-2M5 17l2-8h10l2 8M9 9V5h6v4M12 5V3"
-                    />
-                </svg>
-
-                <span>
-                    Port Network
-                </span>
-
+               }}">
+                <span>Risk Center</span>
             </a>
 
-            <a href="{{ route('business.index') }}"
-   class="flex items-center gap-3 px-5 py-3 rounded-xl transition
-   {{ request()->routeIs('business.*')
-        ? 'bg-emerald-50 text-emerald-700 font-semibold'
-        : 'text-slate-500 hover:bg-emerald-50 hover:text-emerald-700'
-   }}">
-
-    <span>📊</span>
-
-    <span>
-        Business Intelligence
-    </span>
-
-</a>
-
-            {{-- INTELLIGENCE --}}
-
-            <p
-                class="px-4 mt-8 mb-3 text-[11px] font-bold
-                       tracking-[0.18em] text-[#9AA8A0]"
-            >
-                INTELLIGENCE
-            </p>
-            
-            <a href="{{ route('comparison.index') }}"
-   class="flex items-center gap-3 px-5 py-3 rounded-xl transition
-   {{ request()->routeIs('comparison.*')
-        ? 'bg-emerald-50 text-emerald-700 font-semibold'
-        : 'text-slate-500 hover:bg-emerald-50 hover:text-emerald-700'
-   }}">
-
-    <span>⚖️</span>
-
-    <span>Country Comparison</span>
-
-</a>
-
-            {{-- NEWS --}}
-
-<a
-    href="{{ route('news.index') }}"
-    class="flex items-center gap-3 px-5 py-3 rounded-xl transition
-    {{ request()->routeIs('news.*')
-        ? 'bg-emerald-50 text-emerald-700 font-semibold'
-        : 'text-slate-500 hover:bg-emerald-50 hover:text-emerald-700'
-    }}"
->
-
-    <svg
-        class="w-5 h-5"
-        fill="none"
-        stroke="currentColor"
-        viewBox="0 0 24 24"
-    >
-        <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="1.8"
-            d="M5 4h11a2 2 0 012 2v13H7a2 2 0 01-2-2V4zm13 4h1a2 2 0 012 2v7a2 2 0 01-2 2h-1M8 8h7M8 12h7M8 16h4"
-        />
-    </svg>
-
-    <span>
-        News Intelligence
-    </span>
-
-</a>
-
-            {{-- WEATHER --}}
-
-            <a href="{{ route('weather.index') }}"
-   class="flex items-center gap-3 px-5 py-3 rounded-xl transition
-   {{ request()->routeIs('weather.*')
-        ? 'bg-emerald-50 text-emerald-700 font-semibold'
-        : 'text-slate-500 hover:bg-emerald-50 hover:text-emerald-700'
-   }}">
-
-    <span>🌦️</span>
-
-    <span>
-        Weather Monitor
-    </span>
-
-</a>
-
-
-            {{-- RISK SCORE --}}
-
-            <a
-                href="{{ route('risk.index') }}"
-                class="flex items-center gap-3 px-4 py-3.5 rounded-xl mb-1
-                transition duration-200
-                {{ request()->routeIs('risk.*')
+            <a href="{{ route('ports.index') }}"
+               class="flex items-center gap-3 px-4 py-3.5 rounded-xl transition duration-200
+               {{ request()->routeIs('ports.*') || request()->routeIs('weather.*') || request()->routeIs('business.*')
                     ? 'bg-[#ECFDF3] text-[#16803C] font-semibold'
                     : 'text-[#66736B] hover:bg-[#F4F8F5] hover:text-[#16803C]'
-                }}"
-            >
-
-                <svg
-                    class="w-5 h-5"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                >
-                    <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="1.8"
-                        d="M4 18V9m5 9V5m5 13v-7m5 7V3"
-                    />
-                </svg>
-
-                <span>
-                    Risk Intelligence
-                </span>
-
+               }}">
+                <span>Infrastructure</span>
             </a>
 
-
-            {{-- RISK ALERTS --}}
-
-            <a
-                href="{{ route('risk-alerts.index') }}"
-                class="flex items-center justify-between px-4 py-3.5 rounded-xl mb-1
-                transition duration-200
-                {{ request()->routeIs('risk-alerts.*')
+            <a href="{{ route('monitoring.index') }}"
+               class="flex items-center gap-3 px-4 py-3.5 rounded-xl transition duration-200
+               {{ request()->routeIs('monitoring.*') || request()->routeIs('system.health') || request()->routeIs('admin.*')
                     ? 'bg-[#ECFDF3] text-[#16803C] font-semibold'
                     : 'text-[#66736B] hover:bg-[#F4F8F5] hover:text-[#16803C]'
-                }}"
-            >
-
-                <div class="flex items-center gap-3">
-
-                    <svg
-                        class="w-5 h-5"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                    >
-                        <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="1.8"
-                            d="M18 8a6 6 0 00-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4"
-                        />
-                    </svg>
-
-                    <span>
-                        Risk Alerts
-                    </span>
-
-                </div>
-
-
-                @if(($unreadRiskAlerts ?? 0) > 0)
-
-                    <span
-                        class="min-w-6 h-6 px-2 rounded-full
-                               bg-[#DC4C4C] text-white
-                               text-[11px] font-bold
-                               flex items-center justify-center"
-                    >
-                        {{ $unreadRiskAlerts > 99
-                            ? '99+'
-                            : $unreadRiskAlerts
-                        }}
-                    </span>
-
-                @endif
-
+               }}">
+                <span>System</span>
             </a>
 
         </nav>
@@ -491,7 +257,7 @@
                             </p>
 
                             <p class="text-xs text-[#89958E] mt-0.5">
-                                System Administrator
+                                {{ ucfirst(Auth::user()?->role ?? 'user') }}
                             </p>
 
                         </div>
@@ -524,6 +290,8 @@
 
 
         {{-- PAGE CONTENT --}}
+
+        <div id="toast-container" class="fixed top-4 right-4 z-50 max-w-sm"></div>
 
         <main class="px-10 py-9">
 
@@ -566,6 +334,8 @@
     </div>
 
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
 

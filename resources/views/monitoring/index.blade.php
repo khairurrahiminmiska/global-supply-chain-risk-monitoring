@@ -2,6 +2,8 @@
 
 @section('content')
 
+@include('partials.nav.system')
+
 <div class="space-y-8">
 
     {{-- HEADER --}}
@@ -309,9 +311,7 @@
                                 class="px-6 py-16 text-center"
                             >
 
-                                <div class="text-4xl mb-4">
-                                    🛰️
-                                </div>
+                                <div class="text-3xl font-bold text-slate-300 mb-4">O</div>
 
                                 <p class="font-semibold text-slate-700">
                                     No monitoring activity found.

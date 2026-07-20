@@ -11,6 +11,7 @@ use App\Http\Controllers\RiskScoreController;
 use App\Http\Controllers\RiskDashboardController;
 use App\Http\Controllers\RiskAlertController;
 use App\Http\Controllers\RiskMapController;
+use App\Http\Controllers\PortMapController;
 use App\Http\Controllers\MonitoringLogController;
 use App\Http\Controllers\SystemHealthController;
 use App\Http\Controllers\WeatherMonitorController;
@@ -40,6 +41,10 @@ Route::get('/countries/{country}', [CountryController::class, 'show'])
     ->middleware(['auth'])
     ->name('countries.show');
 
+Route::post('/countries/import', [CountryController::class, 'import'])
+    ->middleware('auth')
+    ->name('countries.import');
+
 Route::post('/countries/sync', [CountryController::class, 'sync'])
     ->middleware(['auth'])
     ->name('countries.sync');
@@ -55,12 +60,12 @@ Route::post('/countries/{country}/news', [CountryController::class, 'syncNews'])
 Route::post(
     '/countries/{country}/economy',
     [CountryController::class, 'syncEconomy']
-)->name('countries.economy');
+)->middleware('auth')->name('countries.economy');
 
 Route::post(
     '/countries/{country}/weather',
     [CountryController::class,'syncWeather']
-)->name('countries.weather.sync');
+)->middleware('auth')->name('countries.weather.sync');
 
 Route::post(
     '/countries/{country}/risk',
@@ -72,51 +77,54 @@ Route::post(
     ->name('dashboard.chart');
 
 Route::post('/ports/import',[PortController::class,'import'])
+    ->middleware('auth')
     ->name('ports.import');
 
 Route::get('/ports',[
     PortDashboardController::class,
     'index'
-])->name('ports.index');
+])->middleware('auth')->name('ports.index');
+
+Route::get('/ports/map', [PortMapController::class, 'index'])
+    ->middleware('auth')
+    ->name('ports.map');
 
 Route::get('/risk-score', [
     RiskScoreController::class,
     'index'
-])->name('risk.index');
+])->middleware('auth')->name('risk.index');
 
 Route::get('/risk-score/{riskScore}', [
     RiskScoreController::class,
     'show'
-])->name('risk.show');
+])->middleware('auth')->name('risk.show');
 
 Route::get('/risk-analytics', [
     RiskDashboardController::class,
     'index'
-])->name('risk.analytics');
+])->middleware('auth')->name('risk.analytics');
 
 Route::get('/risk-alerts', [RiskAlertController::class, 'index'])
-    ->name('risk-alerts.index');
+    ->middleware('auth')->name('risk-alerts.index');
 
 Route::patch('/risk-alerts/{riskAlert}/read', [RiskAlertController::class, 'markAsRead'])
-    ->name('risk-alerts.read');
+    ->middleware('auth')->name('risk-alerts.read');
 
 Route::patch('/risk-alerts/read-all', [RiskAlertController::class, 'markAllAsRead'])
-    ->name('risk-alerts.read-all');
+    ->middleware('auth')->name('risk-alerts.read-all');
 
 Route::get('/risk-map', [RiskMapController::class, 'index'])
-    ->name('risk.map');
+    ->middleware('auth')->name('risk.map');
 
 Route::get('/monitoring-activity', [
     MonitoringLogController::class,
     'index'
-])
-    ->middleware('auth')
-    ->name('monitoring.index');
+])->middleware('auth')->name('monitoring.index');
 
 Route::get('/system-health', [
     SystemHealthController::class,
     'index'
-])->name('system.health');
+])->middleware('auth')->name('system.health');
 
 Route::get('/weather-monitor', [
     WeatherMonitorController::class,
@@ -153,5 +161,29 @@ Route::get('/business-dashboard', [
     'index'
 ])->middleware('auth')
   ->name('business.index');
+
+// Watchlist
+Route::get('/watchlist', [\App\Http\Controllers\WatchlistController::class, 'index'])
+    ->middleware('auth')->name('watchlist.index');
+Route::post('/watchlist/{country}', [\App\Http\Controllers\WatchlistController::class, 'store'])
+    ->middleware('auth')->name('watchlist.store');
+Route::delete('/watchlist/{watchlist}', [\App\Http\Controllers\WatchlistController::class, 'destroy'])
+    ->middleware('auth')->name('watchlist.destroy');
+
+// Admin
+Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/', [\App\Http\Controllers\AdminController::class, 'index'])->name('index');
+    Route::get('/users', [\App\Http\Controllers\AdminController::class, 'users'])->name('users');
+    Route::delete('/users/{user}', [\App\Http\Controllers\AdminController::class, 'userDestroy'])->name('users.destroy');
+    Route::get('/ports', [\App\Http\Controllers\AdminController::class, 'ports'])->name('ports');
+    Route::delete('/ports/{port}', [\App\Http\Controllers\AdminController::class, 'portDestroy'])->name('ports.destroy');
+
+    Route::get('/articles', [\App\Http\Controllers\ArticleController::class, 'index'])->name('articles.index');
+    Route::get('/articles/create', [\App\Http\Controllers\ArticleController::class, 'create'])->name('articles.create');
+    Route::post('/articles', [\App\Http\Controllers\ArticleController::class, 'store'])->name('articles.store');
+    Route::get('/articles/{article}/edit', [\App\Http\Controllers\ArticleController::class, 'edit'])->name('articles.edit');
+    Route::put('/articles/{article}', [\App\Http\Controllers\ArticleController::class, 'update'])->name('articles.update');
+    Route::delete('/articles/{article}', [\App\Http\Controllers\ArticleController::class, 'destroy'])->name('articles.destroy');
+});
 
 require __DIR__.'/auth.php';

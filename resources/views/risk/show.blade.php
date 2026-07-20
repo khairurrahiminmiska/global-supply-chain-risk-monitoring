@@ -2,6 +2,8 @@
 
 @section('content')
 
+@include('partials.nav.risk')
+
 <div class="space-y-6">
 
     {{-- HEADER --}}
@@ -76,19 +78,19 @@
                 @if($riskScore->risk_level === 'HIGH')
 
                     <span class="inline-flex px-4 py-2 rounded-full bg-red-100 text-red-700 font-bold">
-                        🔴 HIGH
+                        HIGH
                     </span>
 
                 @elseif($riskScore->risk_level === 'MEDIUM')
 
                     <span class="inline-flex px-4 py-2 rounded-full bg-orange-100 text-orange-700 font-bold">
-                        🟠 MEDIUM
+                        MEDIUM
                     </span>
 
                 @else
 
                     <span class="inline-flex px-4 py-2 rounded-full bg-green-100 text-green-700 font-bold">
-                        🟢 LOW
+                        LOW
                     </span>
 
                 @endif
@@ -123,7 +125,7 @@
         <div class="mb-5">
 
             <h2 class="text-xl font-bold text-slate-800">
-                📈 Risk Score Trend
+                Risk Score Trend
             </h2>
 
             <p class="text-sm text-gray-500 mt-1">
@@ -145,7 +147,7 @@
         <div class="mb-5">
 
             <h2 class="text-xl font-bold text-slate-800">
-                📊 Risk Indicator Trend
+                Risk Indicator Trend
             </h2>
 
             <p class="text-sm text-gray-500 mt-1">
@@ -167,7 +169,7 @@
     <div class="mb-6">
 
         <h2 class="text-xl font-bold text-slate-800">
-            💡 Risk Mitigation Recommendations
+            Risk Mitigation Recommendations
         </h2>
 
         <p class="text-sm text-gray-500 mt-1">
@@ -220,7 +222,7 @@
                                     rounded-full bg-red-100
                                     text-red-700 font-bold"
                                 >
-                                    🔴 HIGH PRIORITY
+                                    HIGH PRIORITY
                                 </span>
 
                             @elseif($recommendation['level'] === 'MEDIUM')
@@ -230,7 +232,7 @@
                                     rounded-full bg-orange-100
                                     text-orange-700 font-bold"
                                 >
-                                    🟠 MEDIUM PRIORITY
+                                    MEDIUM PRIORITY
                                 </span>
 
                             @else
@@ -240,7 +242,7 @@
                                     rounded-full bg-green-100
                                     text-green-700 font-bold"
                                 >
-                                    🟢 LOW PRIORITY
+                                    LOW PRIORITY
                                 </span>
 
                             @endif
@@ -263,7 +265,7 @@
         >
 
             <h3 class="font-bold text-green-700">
-                ✅ No Critical Risk Recommendations
+                No Critical Risk Recommendations
             </h3>
 
             <p class="text-green-600 mt-2">
@@ -406,19 +408,19 @@
                                 @if($history->risk_level === 'HIGH')
 
                                     <span class="inline-flex px-3 py-1 rounded-full bg-red-100 text-red-700 font-semibold">
-                                        🔴 HIGH
+                        HIGH
                                     </span>
 
                                 @elseif($history->risk_level === 'MEDIUM')
 
                                     <span class="inline-flex px-3 py-1 rounded-full bg-orange-100 text-orange-700 font-semibold">
-                                        🟠 MEDIUM
+                        MEDIUM
                                     </span>
 
                                 @else
 
                                     <span class="inline-flex px-3 py-1 rounded-full bg-green-100 text-green-700 font-semibold">
-                                        🟢 LOW
+                                        LOW
                                     </span>
 
                                 @endif
@@ -461,27 +463,17 @@
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-<script>
-
-document.addEventListener('DOMContentLoaded', function () {
-
-    const chartLabels = @json($chartLabels);
-
-    const chartScores = @json($chartScores);
-
-    @php
-    $indicatorData = $riskHistories->map(function ($history) {
-        return [
-            'weather' => $history->weather_score,
-            'inflation' => $history->inflation_score,
-            'currency' => $history->currency_score,
-            'news' => $history->news_score,
-            'port' => $history->port_score,
-        ];
-    })->values();
+@php
+$indicatorData = $riskHistories->map(function ($history) {
+    return [
+        'weather' => $history->weather_score,
+        'inflation' => $history->inflation_score,
+        'currency' => $history->currency_score,
+        'news' => $history->news_score,
+        'port' => $history->port_score,
+    ];
+})->values();
 @endphp
-
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script>
 document.addEventListener('DOMContentLoaded', function () {

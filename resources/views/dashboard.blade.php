@@ -8,7 +8,7 @@
     <div>
 
         <h1 class="text-4xl font-bold text-slate-800">
-            🌍 Global Supply Chain Risk Monitoring
+            Global Supply Chain Risk Monitoring
         </h1>
 
         <p class="text-gray-500 mt-2">
@@ -47,11 +47,7 @@
 
                 </div>
 
-                <div class="text-6xl">
-
-                    🌍
-
-                </div>
+                <div class="w-14 h-14 rounded-2xl bg-blue-100 flex items-center justify-center text-blue-600 font-bold text-xl">#</div>
 
             </div>
 
@@ -83,11 +79,7 @@
 
                 </div>
 
-                <div class="text-6xl">
-
-                    💱
-
-                </div>
+                <div class="w-14 h-14 rounded-2xl bg-green-100 flex items-center justify-center text-green-600 font-bold text-xl">$</div>
 
             </div>
 
@@ -121,11 +113,7 @@
 
                 </div>
 
-                <div class="text-6xl">
-
-                    📰
-
-                </div>
+                <div class="w-14 h-14 rounded-2xl bg-yellow-100 flex items-center justify-center text-yellow-600 font-bold text-xl">N</div>
 
             </div>
 
@@ -174,25 +162,15 @@
 
             <div class="flex gap-3 mt-3 text-xs">
 
-                <span class="text-red-600">
-                    🔴 {{ $highRiskCount }} High
-                </span>
-
-                <span class="text-orange-600">
-                    🟠 {{ $mediumRiskCount }} Medium
-                </span>
-
-                <span class="text-green-600">
-                    🟢 {{ $lowRiskCount }} Low
-                </span>
+                <span class="inline-flex items-center gap-1 text-red-600"><span class="w-2 h-2 rounded-full bg-red-500"></span> {{ $highRiskCount }} High</span>
+                <span class="inline-flex items-center gap-1 text-orange-600"><span class="w-2 h-2 rounded-full bg-orange-500"></span> {{ $mediumRiskCount }} Medium</span>
+                <span class="inline-flex items-center gap-1 text-green-600"><span class="w-2 h-2 rounded-full bg-green-500"></span> {{ $lowRiskCount }} Low</span>
 
             </div>
 
         </div>
 
-        <div class="text-6xl">
-            📈
-        </div>
+        <div class="w-14 h-14 rounded-2xl bg-orange-100 flex items-center justify-center text-orange-600 font-bold text-xl">%</div>
 
     </div>
 
@@ -208,7 +186,7 @@
 
             <h2 class="font-bold text-xl mb-5">
 
-                📈 GDP Trend
+                GDP Trend
 
             </h2>
 
@@ -220,7 +198,7 @@
 
             <h2 class="font-bold text-xl mb-5">
 
-                📊 Inflation Trend
+                Inflation Trend
 
             </h2>
 
@@ -232,7 +210,7 @@
 
             <h2 class="font-bold text-xl mb-5">
 
-                💱 Currency Trend
+                Currency Trend
 
             </h2>
 
@@ -244,7 +222,7 @@
 
             <h2 class="font-bold text-xl mb-5">
 
-                📈 Risk Trend
+                Risk Trend
 
             </h2>
 
@@ -263,7 +241,7 @@
 
             <h2 class="text-xl font-bold mb-5">
 
-                🌍 Latest Countries
+                Latest Countries
 
             </h2>
 
@@ -347,7 +325,7 @@
 
             <h2 class="text-xl font-bold mb-5">
 
-                📰 Latest News
+                Latest News
 
             </h2>
 
@@ -400,8 +378,6 @@
         </div>
 
 </div>
-
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script>
 document.addEventListener('DOMContentLoaded', async function () {

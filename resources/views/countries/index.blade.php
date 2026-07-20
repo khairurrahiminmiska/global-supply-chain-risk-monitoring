@@ -2,6 +2,8 @@
 
 @section('content')
 
+@include('partials.nav.country')
+
 <div class="space-y-6">
 
     {{-- Header --}}
@@ -10,7 +12,7 @@
         <div>
 
             <h1 class="text-4xl font-bold text-slate-800">
-                🌍 Countries
+                Countries
             </h1>
 
             <p class="text-gray-500 mt-2">
@@ -19,19 +21,27 @@
 
         </div>
 
-        <form action="{{ route('countries.sync') }}" method="POST">
+        <div class="flex items-center gap-3">
 
-            @csrf
+            <form action="{{ route('countries.sync') }}" method="POST" data-ajax="true">
+                @csrf
+                <button type="submit"
+                        class="bg-blue-600 hover:bg-blue-700 transition text-white px-6 py-3 rounded-xl shadow-lg">
+                    Sync Countries
+                </button>
+            </form>
 
-            <button
-                type="submit"
-                class="bg-blue-600 hover:bg-blue-700 transition text-white px-6 py-3 rounded-xl shadow-lg">
+            <form action="{{ route('countries.import') }}" method="POST" enctype="multipart/form-data" class="flex items-center gap-2">
+                @csrf
+                <input type="file" name="csv" accept=".csv" required
+                       class="text-sm text-slate-500 file:mr-3 file:px-4 file:py-2 file:rounded-xl file:border-0 file:bg-slate-100 file:text-slate-700 file:font-semibold file:cursor-pointer hover:file:bg-slate-200 transition">
+                <button type="submit"
+                        class="bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-3 rounded-xl shadow-lg text-sm font-semibold transition">
+                    Import CSV
+                </button>
+            </form>
 
-                🌍 Sync Countries
-
-            </button>
-
-        </form>
+        </div>
 
     </div>
 
@@ -115,7 +125,7 @@
                                 <div
                                     class="w-14 h-10 rounded bg-slate-200 flex items-center justify-center">
 
-                                    🌍
+                                    <span class="text-slate-400 font-bold">?</span>
 
                                 </div>
 
@@ -189,7 +199,7 @@
 
                         <td colspan="7" class="text-center py-14 text-gray-500">
 
-                            🌍 Belum ada data negara.
+                            Belum ada data negara.
 
                         </td>
 

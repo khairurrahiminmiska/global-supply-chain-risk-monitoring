@@ -23,13 +23,34 @@
 
         </div>
 
-        <div>
+        <div class="flex items-center gap-3">
+
+            @if($watchlist)
+
+                <form action="{{ route('watchlist.destroy', $watchlist) }}" method="POST">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit"
+                            class="bg-red-50 hover:bg-red-100 text-red-600 px-4 py-2 rounded-lg font-semibold transition text-sm">
+                        Remove from Watchlist
+                    </button>
+                </form>
+
+            @else
+
+                <form action="{{ route('watchlist.store', $country) }}" method="POST">
+                    @csrf
+                    <button type="submit"
+                            class="bg-emerald-50 hover:bg-emerald-100 text-emerald-700 px-4 py-2 rounded-lg font-semibold transition text-sm">
+                        Add to Watchlist
+                    </button>
+                </form>
+
+            @endif
 
             <a href="{{ route('countries.index') }}"
-               class="bg-gray-600 hover:bg-gray-700 text-white px-5 py-2 rounded-lg">
-
-                ← Back
-
+               class="bg-gray-600 hover:bg-gray-700 text-white px-5 py-2 rounded-lg text-sm">
+                Back
             </a>
 
         </div>
@@ -44,7 +65,7 @@
 
             <p class="text-gray-500 text-sm">
 
-                🏛 Capital
+                Capital
 
             </p>
 
@@ -60,7 +81,7 @@
 
             <p class="text-gray-500 text-sm">
 
-                💱 Currency
+                Currency
 
             </p>
 
@@ -76,13 +97,20 @@
 
             <p class="text-gray-500 text-sm">
 
-                👥 Population
+                Population
 
             </p>
 
             <h3 class="text-xl font-bold mt-2">
 
-                {{ number_format($country->population) }}
+                @php
+                    $p = $country->population;
+                    if ($p >= 1e9) $pfmt = number_format($p/1e9,2).'B';
+                    elseif ($p >= 1e6) $pfmt = number_format($p/1e6,2).'M';
+                    elseif ($p >= 1e3) $pfmt = number_format($p/1e3,2).'K';
+                    else $pfmt = number_format($p);
+                @endphp
+                <span class="break-all">{{ $pfmt }}</span>
 
             </h3>
 
@@ -92,7 +120,7 @@
 
             <p class="text-gray-500 text-sm">
 
-                🌎 Region
+                Region
 
             </p>
 

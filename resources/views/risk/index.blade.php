@@ -2,6 +2,8 @@
 
 @section('content')
 
+@include('partials.nav.risk')
+
 <div class="space-y-6">
 
     {{-- HEADER --}}
@@ -9,7 +11,7 @@
 
         <div>
             <h1 class="text-3xl font-bold text-slate-800">
-                ⚠️ Country Risk Score
+                Country Risk Score
             </h1>
 
             <p class="text-gray-500 mt-2">
@@ -21,7 +23,7 @@
             href="{{ route('risk.analytics') }}"
             class="inline-flex items-center justify-center bg-blue-600 hover:bg-blue-700 text-white px-5 py-3 rounded-xl font-semibold transition"
         >
-            📊 View Risk Analytics
+            View Risk Analytics
         </a>
 
     </div>
@@ -126,7 +128,7 @@
                 type="submit"
                 class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-semibold transition"
             >
-                🔍 Search
+                Search
             </button>
 
             <a
@@ -147,7 +149,7 @@
         <div class="p-6 border-b">
 
             <h2 class="text-xl font-bold text-slate-800">
-                🌍 Global Risk Score
+                Global Risk Score
             </h2>
 
             <p class="text-gray-500 text-sm mt-1">
@@ -306,19 +308,19 @@
                                 @if($risk->risk_level === 'HIGH')
 
                                     <span class="inline-flex px-3 py-1 rounded-full bg-red-100 text-red-700 text-sm font-semibold">
-                                        🔴 HIGH
+                                        HIGH
                                     </span>
 
                                 @elseif($risk->risk_level === 'MEDIUM')
 
                                     <span class="inline-flex px-3 py-1 rounded-full bg-orange-100 text-orange-700 text-sm font-semibold">
-                                        🟠 MEDIUM
+                                        MEDIUM
                                     </span>
 
                                 @else
 
                                     <span class="inline-flex px-3 py-1 rounded-full bg-green-100 text-green-700 text-sm font-semibold">
-                                        🟢 LOW
+                                        LOW
                                     </span>
 
                                 @endif
@@ -333,7 +335,7 @@
                                     href="{{ route('risk.show', $risk) }}"
                                     class="inline-flex items-center justify-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-semibold transition"
                                 >
-                                    📈 View History
+                                    View History
                                 </a>
 
                             </td>
@@ -349,9 +351,7 @@
                                 class="p-12 text-center"
                             >
 
-                                <div class="text-4xl mb-3">
-                                    🔍
-                                </div>
+                                <div class="text-3xl font-bold text-slate-300 mb-3">?</div>
 
                                 <p class="text-gray-500">
                                     Risk score data not found.

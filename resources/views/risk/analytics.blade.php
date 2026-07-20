@@ -2,10 +2,12 @@
 
 @section('content')
 
+@include('partials.nav.risk')
+
 <div class="mb-8">
 
     <h1 class="text-3xl font-bold text-slate-800">
-        ⚠️ Global Risk Analytics
+        Global Risk Analytics
     </h1>
 
     <p class="text-gray-500 mt-2">
@@ -139,7 +141,7 @@
     <div class="mb-6">
 
         <h2 class="text-xl font-bold text-slate-800">
-            📊 Global Risk Ranking
+                Global Risk Ranking
         </h2>
 
         <p class="text-gray-500 text-sm mt-1">
@@ -164,7 +166,7 @@
     <div class="p-6 border-b">
 
         <h2 class="text-xl font-bold text-slate-800">
-            🌍 Country Risk Ranking
+            Country Risk Ranking
         </h2>
 
         <p class="text-gray-500 text-sm mt-1">

@@ -2,6 +2,8 @@
 
 @section('content')
 
+@include('partials.nav.infrastructure')
+
 <div class="space-y-8">
 
     @if(session('success'))
@@ -254,7 +256,7 @@
     {{-- ACTION --}}
     <div class="flex flex-col sm:flex-row gap-3">
 
-        <form method="POST" action="{{ route('weather.sync') }}">
+        <form method="POST" action="{{ route('weather.sync') }}" data-ajax="true">
             @csrf
 
             <button

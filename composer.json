@@ -48,6 +48,7 @@
             "bash dev.sh"
         ],
         "serve": [
+            "Composer\\Config::disableProcessTimeout",
             "bash serve.sh"
         ],
         "test": [

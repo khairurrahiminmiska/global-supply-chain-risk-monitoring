@@ -138,18 +138,22 @@ class WeatherMonitorController extends Controller
     }
 
     public function sync(
+        Request $request,
         WeatherService $weatherService
     ) {
         $result = $weatherService->syncAll();
 
+        $message = "Weather monitoring updated. "
+            . "{$result['success']} countries synchronized "
+            . "and {$result['failed']} failed.";
+
+        if ($request->ajax()) {
+            return response()->json(['success' => true, 'message' => $message]);
+        }
+
         return redirect()
             ->route('weather.index')
-            ->with(
-                'success',
-                "Weather monitoring updated. "
-                . "{$result['success']} countries synchronized "
-                . "and {$result['failed']} failed."
-            );
+            ->with('success', $message);
     }
 
     private function getRiskLevel(

@@ -2,6 +2,8 @@
 
 @section('content')
 
+@include('partials.nav.risk')
+
 <div class="space-y-8">
 
     {{-- HEADER --}}
@@ -9,7 +11,7 @@
 
         <div>
             <h1 class="text-3xl font-bold text-slate-800">
-                🔔 Risk Alert Center
+                Risk Alert Center
             </h1>
 
             <p class="text-gray-500 mt-2">
@@ -118,7 +120,7 @@
         <button
             class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-semibold"
         >
-            🔍 Filter
+            Filter
         </button>
 
         <a
@@ -148,13 +150,13 @@
                             @if($alert->level === 'HIGH')
 
                                 <span class="px-3 py-1 bg-red-100 text-red-700 rounded-full text-sm font-bold">
-                                    🔴 HIGH
+                                    HIGH
                                 </span>
 
                             @else
 
                                 <span class="px-3 py-1 bg-orange-100 text-orange-700 rounded-full text-sm font-bold">
-                                    🟠 WARNING
+                                    WARNING
                                 </span>
 
                             @endif
@@ -180,15 +182,15 @@
                         <div class="flex flex-wrap gap-5 mt-4 text-sm text-gray-500">
 
                             <span>
-                                🌍 {{ $alert->country?->name ?? 'Unknown' }}
+                                {{ $alert->country?->name ?? 'Unknown' }}
                             </span>
 
                             <span>
-                                📊 Score: {{ $alert->risk_score }}
+                                Score: {{ $alert->risk_score }}
                             </span>
 
                             <span>
-                                🕒 {{ $alert->triggered_at?->format('d M Y H:i:s') }}
+                                {{ $alert->triggered_at?->format('d M Y H:i:s') }}
                             </span>
 
                         </div>
@@ -230,9 +232,7 @@
 
             <div class="bg-white rounded-2xl border p-12 text-center">
 
-                <div class="text-5xl mb-4">
-                    🔔
-                </div>
+                <div class="text-4xl font-bold text-slate-300 mb-4">!</div>
 
                 <p class="text-gray-500">
                     No risk alerts found.

@@ -36,4 +36,9 @@ class ComparisonController extends Controller
             'countryB'
         ));
     }
+
+    public function compare(Request $request)
+    {
+        return $this->index($request);
+    }
 }

@@ -37,13 +37,17 @@ class WorldBankService
             'SP.POP.TOTL'
         );
 
-        $country->update([
+        $data = array_filter([
             'gdp' => $gdp,
             'inflation' => $inflation,
             'exports' => $exports,
             'imports' => $imports,
             'population' => $population,
-        ]);
+        ], fn($v) => $v !== null);
+
+        if (!empty($data)) {
+            $country->update($data);
+        }
 
         return true;
     }
@@ -55,8 +59,8 @@ class WorldBankService
             $url =
                 "https://api.worldbank.org/v2/country/{$countryCode}/indicator/{$indicator}?format=json";
 
-            $response = Http::timeout(15)
-                ->retry(3, 1000)
+            $response = Http::timeout(5)
+                ->retry(2, 500)
                 ->get($url);
 
             if (! $response->successful()) {

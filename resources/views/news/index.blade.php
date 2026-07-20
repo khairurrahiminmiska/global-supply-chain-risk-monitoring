@@ -2,6 +2,8 @@
 
 @section('content')
 
+@include('partials.nav.country')
+
 <div class="space-y-8">
 
     {{-- HEADER --}}

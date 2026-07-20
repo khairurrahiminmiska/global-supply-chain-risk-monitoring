@@ -5,7 +5,7 @@
         <div>
 
             <h2 class="text-2xl font-bold">
-                📰 News Intelligence
+                News Intelligence
             </h2>
 
             <p class="text-gray-500 text-sm">
@@ -17,7 +17,8 @@
         <form
             action="{{ route('countries.news.sync',$country) }}"
             method="POST"
-            class="flex gap-3">
+            class="flex gap-3"
+            data-ajax="true">
 
             @csrf
 
@@ -25,28 +26,17 @@
                 name="category"
                 class="border rounded-lg px-4 py-2">
 
-                <option value="logistics">
-                    🚚 Logistics
-                </option>
-
-                <option value="trade">
-                    🌍 Trade
-                </option>
-
-                <option value="shipping">
-                    🚢 Shipping
-                </option>
-
-                <option value="economy" selected>
-                    💰 Economy
-                </option>
+                <option value="logistics">Logistics</option>
+                <option value="trade">Trade</option>
+                <option value="shipping">Shipping</option>
+                <option value="economy" selected>Economy</option>
 
             </select>
 
             <button
                 class="bg-green-600 hover:bg-green-700 text-white px-5 py-2 rounded-lg">
 
-                🔄 Update News
+                Update News
 
             </button>
 
@@ -95,13 +85,13 @@
 
     <span class="px-3 py-1 bg-green-100 rounded">
 
-        👍 {{ $item->positive_score }}
+        Positive {{ $item->positive_score }}
 
     </span>
 
     <span class="px-3 py-1 bg-red-100 rounded">
 
-        👎 {{ $item->negative_score }}
+        Negative {{ $item->negative_score }}
 
     </span>
 
@@ -168,11 +158,7 @@
 
         <div class="text-center py-12">
 
-            <div class="text-6xl mb-4">
-
-                📰
-
-            </div>
+            <div class="text-4xl font-bold text-slate-300 mb-4">N</div>
 
             <p class="text-gray-500 text-lg">
 

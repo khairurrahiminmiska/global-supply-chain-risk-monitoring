@@ -2,6 +2,8 @@
 
 @section('content')
 
+@include('partials.nav.country')
+
 <div class="space-y-6">
 
     @include('countries.partials.info-card')

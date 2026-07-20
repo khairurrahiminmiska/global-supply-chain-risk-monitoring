@@ -2,6 +2,8 @@
 
 @section('content')
 
+@include('partials.nav.risk')
+
 <link
     rel="stylesheet"
     href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
@@ -88,7 +90,7 @@
             href="{{ route('risk.index') }}"
             class="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold transition shadow-sm"
         >
-            <span>📈</span>
+            <span class="text-lg font-bold text-slate-400">%</span>
             Risk Score
         </a>
 
@@ -111,7 +113,7 @@
                 </div>
 
                 <div class="w-12 h-12 rounded-2xl bg-slate-100 flex items-center justify-center text-xl">
-                    🌍
+                    <div class="w-12 h-12 rounded-2xl bg-slate-100 flex items-center justify-center text-slate-500 font-bold text-lg">W</div>
                 </div>
             </div>
         </div>
