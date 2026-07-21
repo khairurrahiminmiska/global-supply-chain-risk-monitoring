@@ -277,8 +277,7 @@ return $riskScore;
         }
 
         $negative = $news
-            ->where('sentiment', 'Negative')
-            ->orWhere('sentiment', 'negative')
+            ->whereIn('sentiment', ['Negative', 'negative'])
             ->count();
 
         $total = $news->count();
