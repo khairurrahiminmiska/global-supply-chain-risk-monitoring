@@ -20,11 +20,6 @@ use App\Http\Controllers\ComparisonController;
 use App\Http\Controllers\BusinessDashboardController;
 
 
-Route::get('/health', function () {
-    return response()->json(['status' => 'ok']);
-});
-
-
 Route::get('/dashboard', [DashboardController::class, 'index'])
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
