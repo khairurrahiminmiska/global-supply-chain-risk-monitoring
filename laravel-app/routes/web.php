@@ -20,6 +20,10 @@ use App\Http\Controllers\ComparisonController;
 use App\Http\Controllers\BusinessDashboardController;
 
 
+Route::get('/health', function () {
+    return response('OK', 200);
+});
+
 Route::get('/', function () {
     return view('welcome');
 });
