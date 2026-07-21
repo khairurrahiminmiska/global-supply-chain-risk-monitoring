@@ -1,0 +1,20 @@
+[
+    {
+        "name": "Indonesia",
+        "code": "ID",
+        "capital": "Jakarta",
+        "region": "Asia",
+        "currency": "IDR",
+        "population": 281000000,
+        "flag": "🇮🇩"
+    },
+    {
+        "name": "Japan",
+        "code": "JP",
+        "capital": "Tokyo",
+        "region": "Asia",
+        "currency": "JPY",
+        "population": 123000000,
+        "flag": "🇯🇵"
+    }
+]
